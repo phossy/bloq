@@ -1,0 +1,5 @@
+# Autotools config log file
+config.log
+
+# created during SDL build process but not cleanly deleted by 'make distclean'
+lib/SDL2-2.0.0/sdl2.pc

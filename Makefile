@@ -4,17 +4,19 @@ OBJS = $(SOURCES:.cpp=.o)
 LIBS =
 TARGET = bloq
 
+all: $(TARGET)
+
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-$(TARGET): $(OBJS)
+$(TARGET): deps $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
-
-all: $(TARGET)
 
 clean:
 	rm -f $(OBJS) $(TARGET)
+	make -C lib clean
 
 deps:
+	make -C lib
 
-.PHONY: clean
+.PHONY: deps clean
