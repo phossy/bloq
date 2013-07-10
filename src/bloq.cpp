@@ -3,10 +3,9 @@
 // Copyright   : (C) Phossy Productions
 //============================================================================
 
-#include <stdio.h>
-#include <stdlib.h>
+#include "Application.h"
 
-int main(void) {
-	puts("Hello World!!!");
-	return EXIT_SUCCESS;
+int main(int argc, char **argv) {
+	Application app(argc, argv);
+	return app.run();
 }

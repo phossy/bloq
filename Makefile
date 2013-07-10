@@ -1,16 +1,19 @@
-CXXFLAGS = -O2 -g -Wall -fmessage-length=0
+CXXFLAGS = -O2 -g -Wall -fmessage-length=0 -std=gnu++0x
 SOURCES = $(wildcard src/*.cpp)
 OBJS = $(SOURCES:.cpp=.o)
-LIBS =
+THIRDPARTYBUILDROOT = lib/build
+INCDIRS = -I$(THIRDPARTYBUILDROOT)/include
+LIBDIRS = -L$(THIRDPARTYBUILDROOT)/lib
+LIBS = -lSDL2 -lSDL2_image -ldl -lm -lpthread -lrt
 TARGET = bloq
 
 all: $(TARGET)
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) $(INCDIRS) -c -o $@ $<
 
 $(TARGET): deps $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
+	$(CXX) $(CXXFLAGS) $(LIBDIRS) -o $(TARGET) $(OBJS) $(LIBS)
 
 clean:
 	rm -f $(OBJS) $(TARGET)
