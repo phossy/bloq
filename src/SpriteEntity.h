@@ -17,9 +17,14 @@
 class SpriteEntity: public Entity, public ITimerCallback {
 public:
 	SpriteEntity();
+	SpriteEntity(std::initializer_list<std::shared_ptr<Bitmap> > bmps);
 	virtual ~SpriteEntity();
 	void addBitmap(std::shared_ptr<Bitmap> bitmap);
 	void draw(GraphicsSurface& s);
+
+	virtual int getW();
+	virtual int getH();
+
 protected:
 	virtual void onTimer(int tick);
 	int frame;

@@ -17,6 +17,8 @@ public:
 	int getX();
 	int getY();
 	void setPos(int nx, int ny);
+	virtual int getW();
+	virtual int getH();
 protected:
 	int x;
 	int y;

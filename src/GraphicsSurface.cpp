@@ -22,3 +22,13 @@ void GraphicsSurface::drawBitmap(const Bitmap& bmp, int x, int y) {
 	SDL_Rect rect = {x, y, 0, 0};
 	SDL_BlitSurface(bmp.surface, NULL, s, &rect);
 }
+
+int GraphicsSurface::getW() {
+	SDL_Surface *s = getSurface();
+	return s->w;
+}
+
+int GraphicsSurface::getH() {
+	SDL_Surface *s = getSurface();
+	return s->h;
+}

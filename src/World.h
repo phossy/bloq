@@ -10,16 +10,25 @@
 
 #include <list>
 #include "Entity.h"
+#include "EntityFactory.h"
+#include "GraphicsSurface.h"
 
 class World {
 public:
 	World();
 	virtual ~World();
 
-	void addEntity(const Entity* entity);
-	void removeEntity(const Entity* entity);
+	void spawnEntityAt(const std::string& type, int x, int y);
+	void addEntity(std::shared_ptr<Entity> entity);
+	void removeEntity(std::shared_ptr<Entity> entity);
+	const EntityFactory& getEntityFactory();
+
+	void drawArea(GraphicsSurface& s, int x, int y);
+
 protected:
-	std::list<const Entity*> entities;
+	std::list<std::shared_ptr<Entity> > entities;
+
+	std::unique_ptr<EntityFactory> entFactory;
 };
 
 #endif /* WORLD_H_ */

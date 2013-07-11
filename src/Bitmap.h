@@ -18,6 +18,9 @@ public:
 	Bitmap(const std::string& path);
 	virtual ~Bitmap();
 
+	int getW();
+	int getH();
+
 	friend class GraphicsSurface;
 private:
 	SDL_Surface *surface;

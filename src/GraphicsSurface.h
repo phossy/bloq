@@ -19,6 +19,10 @@ public:
 	GraphicsSurface();
 	virtual ~GraphicsSurface();
 	void drawBitmap(const Bitmap& bmp, int x, int y);
+
+	int getW();
+	int getH();
+
 protected:
 	virtual void repaint() = 0;
 	virtual SDL_Surface* getSurface() = 0;

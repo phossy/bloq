@@ -51,9 +51,7 @@ Application::~Application() {
 
 int Application::run() {
 	// TODO test remove me!!!
-	SpriteEntity ent;
-	ent.addBitmap(std::make_shared<Bitmap>("assets/bog_green0.png"));
-	ent.addBitmap(std::make_shared<Bitmap>("assets/crystal_floor0.png"));
+	SpriteEntity ent{std::make_shared<Bitmap>("assets/PlanetCute PNG/Plain Block.png"), std::make_shared<Bitmap>("assets/PlanetCute PNG/Stone Block.png")};
 	ent.setPos(100, 100);
 	timer->schedule(ent, 5);
 

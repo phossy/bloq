@@ -11,6 +11,9 @@
 SpriteEntity::SpriteEntity() : frame(0) {
 }
 
+SpriteEntity::SpriteEntity(std::initializer_list<std::shared_ptr<Bitmap> > bmps) : frame(0), bitmaps(bmps) {
+}
+
 SpriteEntity::~SpriteEntity() {
 	// TODO Auto-generated destructor stub
 }
@@ -27,4 +30,20 @@ void SpriteEntity::draw(GraphicsSurface& s) {
 	int numBitmaps = bitmaps.size();
 	int frameID = frame % numBitmaps;
 	s.drawBitmap(*bitmaps[frameID], x, y);
+}
+
+int SpriteEntity::getW() {
+	if (bitmaps.size() == 0) {
+		throw "Can't get width of SpriteEntity with no bitmaps";
+	}
+
+	return bitmaps[0]->getW();
+}
+
+int SpriteEntity::getH() {
+	if (bitmaps.size() == 0) {
+		throw "Can't get height of SpriteEntity with no bitmaps";
+	}
+
+	return bitmaps[0]->getH();
 }

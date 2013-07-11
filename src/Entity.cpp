@@ -26,3 +26,11 @@ void Entity::setPos(int nx, int ny) {
 	x = nx;
 	y = ny;
 }
+
+int Entity::getW() {
+	return 0;
+}
+
+int Entity::getH() {
+	return 0;
+}
