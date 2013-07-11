@@ -10,8 +10,11 @@
 
 #include "RenderWindow.h"
 #include "Config.h"
+#include "Timer.h"
 
 #include <memory>
+
+#define TICK 100
 
 class Application {
 public:
@@ -22,6 +25,7 @@ public:
 private:
 	std::unique_ptr<RenderWindow> renderWin;
 	std::unique_ptr<Config> config;
+	std::unique_ptr<Timer> timer;
 };
 
 #endif /* APPLICATION_H_ */

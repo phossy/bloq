@@ -11,6 +11,8 @@
 #include <SDL2/SDL_image.h>
 #include "Log.h"
 
+#include "SpriteEntity.h"
+
 Application::Application(int argc, char **argv) {
 	// TODO argument parsing
 
@@ -33,7 +35,11 @@ Application::Application(int argc, char **argv) {
 		throw IMG_GetError();
 	}
 
+	// render window
 	renderWin = std::unique_ptr<RenderWindow>(new RenderWindow(config->get<int>("width"), config->get<int>("height"), config->get<bool>("fullscreen")));
+
+	// event timer/looper
+	timer = std::unique_ptr<Timer>(new Timer());
 }
 
 Application::~Application() {
@@ -45,27 +51,47 @@ Application::~Application() {
 
 int Application::run() {
 	// TODO test remove me!!!
-	Bitmap b("assets/bog_green0.png");
+	SpriteEntity ent;
+	ent.addBitmap(std::make_shared<Bitmap>("assets/bog_green0.png"));
+	ent.addBitmap(std::make_shared<Bitmap>("assets/crystal_floor0.png"));
+	ent.setPos(100, 100);
+	timer->schedule(ent, 5);
 
+	// ---------- MAIN LOOP ----------
 	bool isStopping = false;
 	while (!isStopping) {
+		int beginMs = SDL_GetTicks();
+
 		SDL_Event e;
-		if (SDL_PollEvent(&e)) {
+
+		// retrieve waiting events
+		while (SDL_PollEvent(&e)) {
 			switch (e.type) {
 			case SDL_QUIT:
 				Log::info("Quit event received");
 				isStopping = true;
 				break;
 			default:
-				//Log::info("Event: %d", e.type);
 				break;
 			}
-		} else {
-			sleep(1);
 		}
 
-		renderWin->drawBitmap(b, 100, 100);
+		// Tick the timer to let callbacks fire
+		timer->tick();
+
+		// Redraw
+		ent.draw(*renderWin);
 		renderWin->repaint();
+
+		int delta = SDL_GetTicks() - beginMs;
+		// wait if there is still time left this tick
+		if (delta < TICK) {
+			SDL_Delay(TICK - delta);
+		} else if (delta > TICK) {
+			Log::info("Event loop slowdown: %d ms behind", delta - TICK);
+		}
 	}
+
+	// ----------
 	return 0;
 }

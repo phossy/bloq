@@ -15,6 +15,6 @@ Asset::Asset(const std::string& path) {
 }
 
 Asset::~Asset() {
-	// TODO Auto-generated destructor stub
+	SDL_FreeRW(file);
 }
 
