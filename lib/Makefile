@@ -16,12 +16,12 @@ SDL_TTF_TARGET = $(LIBDIR)/libSDL2_ttf.a
 all: $(SDL_TARGET) $(SDL_IMAGE_TARGET) $(SDL_MIXER_TARGET) $(SDL_NET_TARGET) $(SDL_TTF_TARGET)
 
 $(SDL_TARGET):
-	[ -f $(SDL_DIR)/Makefile ] || (cd $(SDL_DIR) && ./configure --prefix=$(CURDIR)/$(OUTDIR) --disable-shared)
+	[ -f $(SDL_DIR)/Makefile ] || (cd $(SDL_DIR) && ./configure --prefix=$(CURDIR)/$(OUTDIR) --disable-shared $(CONFIGURE_OPTS))
 	[ -f $(SDL_TARGET) ] || $(MAKE) -C $(SDL_DIR) install
 
 define build-subdir
 @echo "Building $< -> $@"
-[ -f $</Makefile ] || (cd $< && ./configure --prefix=$(CURDIR)/$(OUTDIR) --with-sdl-prefix=$(CURDIR)/$(OUTDIR) --disable-shared)
+[ -f $</Makefile ] || (cd $< && ./configure --prefix=$(CURDIR)/$(OUTDIR) --with-sdl-prefix=$(CURDIR)/$(OUTDIR) --disable-shared $(CONFIGURE_OPTS))
 [ -f $@ ] || $(MAKE) -C $< install
 @echo "Delete $@ to force a rebuild of the library"
 endef
@@ -35,6 +35,11 @@ $(SDL_MIXER_TARGET): $(SDL_MIXER_DIR)
 $(SDL_NET_TARGET): $(SDL_NET_DIR)
 	$(build-subdir)
 
+# libfreetype2 is installed via Homebrew on OS X
+ifeq ($(shell uname -s),Darwin)
+$(SDL_TTF_TARGET): CONFIGURE_OPTS += --with-freetype-prefix=/usr/local
+endif
+
 $(SDL_TTF_TARGET): $(SDL_TTF_DIR)
 	$(build-subdir)
 
@@ -44,6 +49,6 @@ clean:
 	-$(MAKE) -C $(SDL_MIXER_DIR) distclean
 	-$(MAKE) -C $(SDL_NET_DIR) distclean
 	-$(MAKE) -C $(SDL_TTF_DIR) distclean
-	rm -rf $(OUTDIR)
+	$(RM) -r $(OUTDIR)
 
 .PHONY: clean
