@@ -1,3 +1,8 @@
+# Eclipse project files
+.settings
+.cproject
+.project
+
 # Autotools config log file
 config.log
 
@@ -10,4 +15,41 @@ lib/SDL2-2.0.0/sdl2.pc
 *.la
 lib/build
 bloq
+
+# 3rd party libs build artifacts
+# lib/SDL2-2.0.0/include/SDL_config.h # putting this here because it does exist in the repo but gets modified by the configure script
+lib/SDL2-2.0.0/Makefile
+lib/SDL2-2.0.0/Makefile.rules
+lib/SDL2-2.0.0/build/
+lib/SDL2-2.0.0/config.status
+lib/SDL2-2.0.0/libtool
+lib/SDL2-2.0.0/sdl2-config
+lib/SDL2_image-2.0.0/.deps/
+lib/SDL2_image-2.0.0/.libs/
+lib/SDL2_image-2.0.0/Makefile
+lib/SDL2_image-2.0.0/SDL2_image.pc
+lib/SDL2_image-2.0.0/config.status
+lib/SDL2_image-2.0.0/libtool
+lib/SDL2_image-2.0.0/showimage
+lib/SDL2_mixer-2.0.0/Makefile
+lib/SDL2_mixer-2.0.0/SDL2_mixer.pc
+lib/SDL2_mixer-2.0.0/build/
+lib/SDL2_mixer-2.0.0/config.status
+lib/SDL2_mixer-2.0.0/libtool
+lib/SDL2_net-2.0.0/.deps/
+lib/SDL2_net-2.0.0/.libs/
+lib/SDL2_net-2.0.0/Makefile
+lib/SDL2_net-2.0.0/SDL2_net.pc
+lib/SDL2_net-2.0.0/config.status
+lib/SDL2_net-2.0.0/libtool
+lib/SDL2_net-2.0.0/showinterfaces
+lib/SDL2_ttf-2.0.12/.deps/
+lib/SDL2_ttf-2.0.12/.libs/
+lib/SDL2_ttf-2.0.12/Makefile
+lib/SDL2_ttf-2.0.12/SDL2_ttf.pc
+lib/SDL2_ttf-2.0.12/autom4te.cache/
+lib/SDL2_ttf-2.0.12/config.status
+lib/SDL2_ttf-2.0.12/glfont
+lib/SDL2_ttf-2.0.12/libtool
+lib/SDL2_ttf-2.0.12/showfont
 
