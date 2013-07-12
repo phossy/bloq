@@ -3,6 +3,10 @@
 .cproject
 .project
 
+# Xcode workspace/user settings
+*.xcworkspace
+xcuserdata
+
 # Autotools config log file
 config.log
 
