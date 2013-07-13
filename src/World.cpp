@@ -29,7 +29,7 @@ void World::removeEntity(std::shared_ptr<Entity> entity) {
 	entities.remove(entity);
 }
 
-const EntityFactory& World::getEntityFactory() {
+EntityFactory& World::getEntityFactory() {
 	return *entFactory;
 }
 
@@ -37,16 +37,15 @@ void World::drawArea(GraphicsSurface& s, int x, int y) {
 	int w = s.getW();
 	int h = s.getH();
 
-	int maxVisibleX = x + w;
-	int maxVisibleY = y + h;
-
-	for (auto &i : entities) {
+	for (auto &e : entities) {
 		// bounds check to see whether part of the entity is visible on the screen
-		int entX = i->getX();
-		int entY = i->getY();
-		int entMaxX = entX + i->getW();
-		int entMaxY = entY + i->getH();
-
-
+		int ex = e->getX();
+		int ey = e->getY();
+		
+		if ((ex >= (x - e->getW()) && ex <= (x + w)) &&
+			(ey >= (y - e->getH()) && ey <= (y + h))) {
+			// visible, draw it
+			e->draw(s, x, y);
+		}
 	}
 }

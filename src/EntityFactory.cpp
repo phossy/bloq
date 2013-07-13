@@ -16,8 +16,8 @@ EntityFactory::~EntityFactory() {
 	// TODO Auto-generated destructor stub
 }
 
-void EntityFactory::registerCreator(const std::string& name, std::function<std::shared_ptr<Entity>() > creator) {
-	if (creators.find(name) != creators.end()) {
+void EntityFactory::registerPrototype(const std::string& name, EntityPrototype creator) {
+	if (creators.find(name) == creators.end()) {
 		creators.insert({name, creator});
 	}
 }

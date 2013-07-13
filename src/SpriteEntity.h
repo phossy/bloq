@@ -20,8 +20,7 @@ public:
 	SpriteEntity(std::initializer_list<std::shared_ptr<Bitmap> > bmps);
 	virtual ~SpriteEntity();
 	void addBitmap(std::shared_ptr<Bitmap> bitmap);
-	void draw(GraphicsSurface& s);
-
+	virtual void draw(GraphicsSurface& s, int offx, int offy);
 	virtual int getW();
 	virtual int getH();
 

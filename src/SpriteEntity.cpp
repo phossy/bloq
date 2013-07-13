@@ -26,10 +26,10 @@ void SpriteEntity::addBitmap(std::shared_ptr<Bitmap> bitmap) {
 	bitmaps.push_back(bitmap);
 }
 
-void SpriteEntity::draw(GraphicsSurface& s) {
+void SpriteEntity::draw(GraphicsSurface& s, int offx, int offy) {
 	int numBitmaps = bitmaps.size();
 	int frameID = frame % numBitmaps;
-	s.drawBitmap(*bitmaps[frameID], x, y);
+	s.drawBitmap(*bitmaps[frameID], x - offx, y - offy);
 }
 
 int SpriteEntity::getW() {

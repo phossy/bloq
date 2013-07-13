@@ -9,6 +9,7 @@
 #define ENTITY_H_
 
 #include <memory>
+#include "GraphicsSurface.h"
 
 class Entity {
 public:
@@ -19,6 +20,7 @@ public:
 	void setPos(int nx, int ny);
 	virtual int getW();
 	virtual int getH();
+	virtual void draw(GraphicsSurface& s, int offx, int offy);
 protected:
 	int x;
 	int y;

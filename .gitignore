@@ -56,4 +56,17 @@ lib/SDL2_ttf-2.0.12/config.status
 lib/SDL2_ttf-2.0.12/glfont
 lib/SDL2_ttf-2.0.12/libtool
 lib/SDL2_ttf-2.0.12/showfont
+lib/LuaJIT-2.0.2/src/host/buildvm
+lib/LuaJIT-2.0.2/src/host/buildvm_arch.h
+lib/LuaJIT-2.0.2/src/host/minilua
+lib/LuaJIT-2.0.2/src/jit/vmdef.lua
+lib/LuaJIT-2.0.2/src/libluajit.a
+lib/LuaJIT-2.0.2/src/libluajit.so
+lib/LuaJIT-2.0.2/src/lj_bcdef.h
+lib/LuaJIT-2.0.2/src/lj_ffdef.h
+lib/LuaJIT-2.0.2/src/lj_folddef.h
+lib/LuaJIT-2.0.2/src/lj_libdef.h
+lib/LuaJIT-2.0.2/src/lj_recdef.h
+lib/LuaJIT-2.0.2/src/lj_vm.s
+lib/LuaJIT-2.0.2/src/luajit
 

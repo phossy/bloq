@@ -13,6 +13,7 @@
 #include <unistd.h>
 
 #include "SpriteEntity.h"
+#include "World.h"
 
 Application::Application(int argc, char **argv) {
 	// TODO argument parsing
@@ -52,9 +53,18 @@ Application::~Application() {
 
 int Application::run() {
 	// TODO test remove me!!!
-	SpriteEntity ent{std::make_shared<Bitmap>("assets/PlanetCute PNG/Plain Block.png"), std::make_shared<Bitmap>("assets/PlanetCute PNG/Stone Block.png")};
-	ent.setPos(100, 100);
-	timer->schedule(ent, 5);
+	World w;
+	EntityPrototype entPrototype = [&]() {
+		auto ent = std::shared_ptr<SpriteEntity>(
+												 new SpriteEntity{
+													 std::make_shared<Bitmap>("assets/PlanetCute PNG/Plain Block.png"),
+													 std::make_shared<Bitmap>("assets/PlanetCute PNG/Stone Block.png")
+												 });
+		timer->schedule(*ent, 5);
+		return ent;
+	};
+	w.getEntityFactory().registerPrototype("test", entPrototype);
+	w.spawnEntityAt("test", 100, 100);
 
 	// ---------- MAIN LOOP ----------
 	bool isStopping = false;
@@ -79,7 +89,7 @@ int Application::run() {
 		timer->tick();
 
 		// Redraw
-		ent.draw(*renderWin);
+		w.drawArea(*renderWin, 0, 0);
 		renderWin->repaint();
 
 		int delta = SDL_GetTicks() - beginMs;

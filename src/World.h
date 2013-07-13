@@ -21,7 +21,7 @@ public:
 	void spawnEntityAt(const std::string& type, int x, int y);
 	void addEntity(std::shared_ptr<Entity> entity);
 	void removeEntity(std::shared_ptr<Entity> entity);
-	const EntityFactory& getEntityFactory();
+	EntityFactory& getEntityFactory();
 
 	void drawArea(GraphicsSurface& s, int x, int y);
 

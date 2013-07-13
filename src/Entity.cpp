@@ -34,3 +34,7 @@ int Entity::getW() {
 int Entity::getH() {
 	return 0;
 }
+
+void Entity::draw(GraphicsSurface& s, int offx, int offy) {
+	throw "Not a drawable";
+}

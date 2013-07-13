@@ -14,15 +14,17 @@
 #include <string>
 #include <map>
 
+typedef std::function<std::shared_ptr<Entity>() > EntityPrototype;
+
 class EntityFactory {
 public:
 	EntityFactory();
 	virtual ~EntityFactory();
 
-	void registerCreator(const std::string& name, std::function<std::shared_ptr<Entity>()> creator);
+	void registerPrototype(const std::string& name, EntityPrototype creator);
 	std::shared_ptr<Entity> create(const std::string& name);
 private:
-	std::map<const std::string, std::function<std::shared_ptr<Entity>()> > creators;
+	std::map<const std::string, EntityPrototype> creators;
 };
 
 #endif /* ENTITYFACTORY_H_ */
