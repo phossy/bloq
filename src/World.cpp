@@ -49,3 +49,7 @@ void World::drawArea(GraphicsSurface& s, int x, int y) {
 		}
 	}
 }
+
+void World::registerLua(lua_State *L) {
+
+}

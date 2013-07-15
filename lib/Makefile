@@ -8,6 +8,7 @@ SDL_NET_DIR = SDL2_net-2.0.0
 SDL_TTF_DIR = SDL2_ttf-2.0.12
 
 LUAJIT_DIR = LuaJIT-2.0.2
+LUABRIDGE_DIR = LuaBridge/Source/LuaBridge
 
 SDL_TARGET = $(LIBDIR)/libSDL2.a
 SDL_IMAGE_TARGET = $(LIBDIR)/libSDL2_image.a
@@ -16,8 +17,9 @@ SDL_NET_TARGET = $(LIBDIR)/libSDL2_net.a
 SDL_TTF_TARGET = $(LIBDIR)/libSDL2_ttf.a
 
 LUAJIT_TARGET = $(LIBDIR)/libluajit-5.1.a
+LUABRIDGE_TARGET = $(OUTDIR)/include/LuaBridge
 
-all: $(SDL_TARGET) $(SDL_IMAGE_TARGET) $(SDL_MIXER_TARGET) $(SDL_NET_TARGET) $(SDL_TTF_TARGET) $(LUAJIT_TARGET)
+all: $(SDL_TARGET) $(SDL_IMAGE_TARGET) $(SDL_MIXER_TARGET) $(SDL_NET_TARGET) $(SDL_TTF_TARGET) $(LUAJIT_TARGET) $(LUABRIDGE_TARGET)
 
 $(SDL_TARGET):
 	[ -f $(SDL_DIR)/Makefile ] || (cd $(SDL_DIR) && ./configure --prefix=$(CURDIR)/$(OUTDIR) --disable-shared $(CONFIGURE_OPTS))
@@ -49,6 +51,9 @@ $(SDL_TTF_TARGET): $(SDL_TTF_DIR)
 
 $(LUAJIT_TARGET): $(LUAJIT_DIR)
 	[ -f $@ ] || $(MAKE) -C $< install PREFIX=$(CURDIR)/$(OUTDIR)
+
+$(LUABRIDGE_TARGET): $(LUABRIDGE_DIR)
+	cp -r $< $@
 
 clean:
 	-$(MAKE) -C $(SDL_DIR) distclean

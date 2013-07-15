@@ -15,6 +15,9 @@
 #include "SpriteEntity.h"
 #include "World.h"
 
+#include <luajit-2.0/lua.hpp>
+#include <LuaBridge/LuaBridge.h>
+
 Application::Application(int argc, char **argv) {
 	// TODO argument parsing
 
@@ -52,8 +55,20 @@ Application::~Application() {
 }
 
 int Application::run() {
+	// TODO more tests with lua, get rid of me
+	lua_State *L = luaL_newstate();
+	luaL_openlibs(L);
+
+	luabridge::getGlobalNamespace(L)
+		.beginNamespace("test")
+		.beginClass<World>("World")
+			.addFunction("spawnEntityAt", &World::spawnEntityAt)
+		.endClass()
+		.endNamespace();
+
 	// TODO test remove me!!!
-	World w;
+	WorldRef w = std::make_shared<World>();
+	//World w;
 	EntityPrototype entPrototype = [&]() {
 		auto ent = std::shared_ptr<SpriteEntity>(
 												 new SpriteEntity{
@@ -63,8 +78,13 @@ int Application::run() {
 		timer->schedule(*ent, 5);
 		return ent;
 	};
-	w.getEntityFactory().registerPrototype("test", entPrototype);
-	w.spawnEntityAt("test", 100, 100);
+	w->getEntityFactory().registerPrototype("test", entPrototype);
+
+	Log::info("setting");
+	luabridge::LuaRef v (L, w.get());
+	luabridge::setGlobal(L, v, "w");
+	luaL_dostring(L, "w:spawnEntityAt(\"test\", 100, 100)");
+	//w.spawnEntityAt("test", 100, 100);
 
 	// ---------- MAIN LOOP ----------
 	bool isStopping = false;
@@ -89,7 +109,7 @@ int Application::run() {
 		timer->tick();
 
 		// Redraw
-		w.drawArea(*renderWin, 0, 0);
+		w->drawArea(*renderWin, 0, 0);
 		renderWin->repaint();
 
 		int delta = SDL_GetTicks() - beginMs;

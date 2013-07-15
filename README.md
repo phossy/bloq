@@ -3,8 +3,9 @@ A cross-platform 2D top-down/platformer-style game engine. Licensed under LGPLv3
 
 ## Building
 ### Linux
-You need all of the prerequisites that SDL2 requires.
-You also need a version of GCC with C++11 / C++0x support (gcc 4.7 works).
+You need: 
+* All of the prerequisites that SDL2 requires.
+* A version of GCC with C++11 / C++0x support (gcc 4.7 works).
 
 Libraries that are used by the engine are included in lib/ with a makefile to build all as static libraries which get placed in lib/build/...
 The makefile is designed to avoid rebuilding a given library if the .a file exists. To force a rebuild of a library, delete the corresponding .a file (or use make clean which will distclean the 3rd party libs).

@@ -4,7 +4,7 @@ OBJS = $(SOURCES:.cpp=.o)
 THIRDPARTYBUILDROOT = lib/build
 INCDIRS = -I$(THIRDPARTYBUILDROOT)/include
 LIBDIRS = -L$(THIRDPARTYBUILDROOT)/lib
-LIBS = -lSDL2 -lSDL2_image -ldl -lm -lpthread
+LIBS = -lSDL2 -lSDL2_image -ldl -lm -lpthread -lluajit-5.1
 TARGET = bloq
 
 # Platform-specific garbage.
@@ -28,9 +28,11 @@ $(TARGET): deps $(OBJS)
 
 clean:
 	$(RM) $(OBJS) $(TARGET)
+
+distclean: clean
 	$(MAKE) -C lib clean
 
 deps:
 	$(MAKE) -C lib
 
-.PHONY: deps clean
+.PHONY: deps clean distclean
