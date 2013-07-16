@@ -7,6 +7,8 @@
 
 #include "Asset.h"
 
+LUA_CLASS_REGISTER(Asset);
+
 Asset::Asset(const std::string& path) {
 	file = SDL_RWFromFile(path.c_str(), "r");
 	if (file == NULL) {
@@ -16,5 +18,14 @@ Asset::Asset(const std::string& path) {
 
 Asset::~Asset() {
 	SDL_FreeRW(file);
+}
+
+void Asset::registerLua(lua_State *l) {
+	luabridge::getGlobalNamespace(l)
+		.beginNamespace(DEFAULT_NAMESPACE)
+			.beginClass<Asset>("Asset")
+				.addConstructor<void(*)(const std::string&)>()
+			.endClass()
+		.endNamespace();
 }
 

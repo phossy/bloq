@@ -25,6 +25,13 @@ public:
 	
 	void runCode(const std::string& code);
 	void runFile(const std::string& file); // TODO use Asset
+
+	template <class T> void addVar(const std::string& ns, const std::string& varname, T& var, bool rw = true) {
+		luabridge::getGlobalNamespace(state)
+			.beginNamespace(ns.c_str())
+				.addVariable(varname.c_str(), &var, rw)
+			.endNamespace();
+	}
 private:
 	lua_State* state;
 };

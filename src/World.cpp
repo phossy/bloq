@@ -22,8 +22,9 @@ void World::registerLua(lua_State *l) {
 		.beginNamespace(DEFAULT_NAMESPACE)
 		.beginClass<World>("World")
 			.addFunction("spawnEntityAt", &World::spawnEntityAt)
-			//.addFunction("addEntity", &World::addEntity)
-			//.addFunction("removeEntity", &World::removeEntity)
+			.addFunction("getEntityFactory", &World::getEntityFactory)
+			.addFunction("addEntity", &World::addEntity)
+			.addFunction("removeEntity", &World::removeEntity)
 		.endClass()
 	.endNamespace();
 }

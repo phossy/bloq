@@ -55,21 +55,6 @@ Application::~Application() {
 	SDL_Quit();
 }
 
-//template <class T>
-namespace luabridge {
-	template <> struct ArgList<void*> {
-		ArgList<void*>(lua_State *l) {}
-	};
-	
-	template <> struct FuncTraits<std::function<WorldRef()>* > {
-		typedef WorldRef ReturnType;
-		typedef void* Params;
-		static ReturnType call(std::function<WorldRef()>* fnptr, ArgList<Params> args) {
-			return (*fnptr)();
-		}
-	};
-}
-
 int Application::run() {
 	// TODO more tests with lua, get rid of me
 	ScriptManagerRef s = std::make_shared<ScriptManager>();
@@ -88,12 +73,14 @@ int Application::run() {
 	};
 	w->getEntityFactory()->registerPrototype("test", entPrototype);
 
-	//luabridge::LuaRef v (l, &w);
-	//std::function<WorldRef()> func = [&w]() -> WorldRef { return w; };
-	
-	s->runFile("assets/init.lua");
-	
-	//w.spawnEntityAt("test", 100, 100);
+	// Add global 'vars' to lua
+	s->addVar(DEFAULT_NAMESPACE, "world", w, false);
+	try {
+		s->runFile("assets/init.lua");
+	} catch (std::string &s) {
+		Log::info("Script threw exception: %s", s.c_str());
+	}
+	Log::info("script done");
 
 	// ---------- MAIN LOOP ----------
 	bool isStopping = false;

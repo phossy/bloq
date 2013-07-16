@@ -22,14 +22,14 @@ ScriptManager::~ScriptManager() {
 }
 
 void ScriptManager::runCode(const std::string& code) {
-	if (luaL_dostring(state, code.c_str()) == LUA_ERRRUN) {
+	if (luaL_dostring(state, code.c_str()) != 0) {
 		const std::string& err = luabridge::Stack<std::string const&>::get(state, -1);
 		throw err;
 	}
 }
 
 void ScriptManager::runFile(const std::string& file) {
-	if (luaL_dofile(state, file.c_str()) == LUA_ERRRUN) {
+	if (luaL_dofile(state, file.c_str()) != 0) {
 		const std::string& err = luabridge::Stack<std::string const&>::get(state, -1);
 		throw err;
 	}

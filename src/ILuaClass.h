@@ -39,11 +39,25 @@
  - Create a bunch of luabridge ContainerConstructionTraits magic to handle
  std::shared_ptr going between the c++/lua side.
  
+ Derived classes:
+ Derived.h:
+ class Derived : LUA_CLASS_DERIVED(Base) {
+ // ...
+ public:
+ LUA_CLASS_GET_SHARED_BASE(Derived, Base);
+ };
+ LUA_CLASS_SHARED_DEF(Derived);
+
+ Derived.cpp:
+ LUA_CLASS_REGISTER(Derived);
 */
 
 #define DEFAULT_NAMESPACE "game"
 
 typedef std::function<void (lua_State*)> LuaRegisterFunc;
+
+class ILuaClass;
+typedef std::shared_ptr<ILuaClass> ILuaClassRef;
 
 class ILuaClass {
 public:
@@ -71,6 +85,7 @@ namespace luabridge {
 #define LUA_DERIVED_CLASS(T) public virtual ILuaClass
 #define LUA_CLASS(T) LUA_DERIVED_CLASS(T), public std::enable_shared_from_this<T>
 #define LUA_CLASS_GET_SHARED(T) inline std::shared_ptr<T> get_shared() { return shared_from_this(); }
+#define LUA_CLASS_GET_SHARED_BASE(B,A) inline std::shared_ptr<B> get_shared() { return std::static_pointer_cast<B,A>(shared_from_this()); }
 #define LUA_CLASS_SHARED_DEF(T) \
 	namespace luabridge { \
 		template <> struct ContainerConstructionTraits<std::shared_ptr<T> > { \

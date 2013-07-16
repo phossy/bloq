@@ -22,6 +22,7 @@ class SpriteEntity: public Entity, public ITimerCallback, LUA_DERIVED_CLASS(Spri
 public:
 	SpriteEntity();
 	SpriteEntity(std::initializer_list<BitmapRef> bmps);
+	SpriteEntity(lua_State *l);
 	virtual ~SpriteEntity();
 	void addBitmap(BitmapRef bitmap);
 	virtual void draw(GraphicsSurfaceRef s, int offx, int offy);
@@ -29,15 +30,11 @@ public:
 	virtual int getH() const;
 
 	static void registerLua(lua_State *l);
-	//LUA_CLASS_GET_SHARED(Entity);
-	//LUA_CLASS_GET_SHARED(SpriteEntity);
 	
 protected:
 	virtual void onTimer(int tick);
 	int frame;
 	std::vector<BitmapRef> bitmaps;
 };
-
-//LUA_CLASS_SHARED_DEF(SpriteEntity);
 
 #endif /* SPRITEENTITY_H_ */

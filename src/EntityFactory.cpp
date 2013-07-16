@@ -7,6 +7,8 @@
 
 #include "EntityFactory.h"
 
+LUA_CLASS_REGISTER(EntityFactory);
+
 EntityFactory::EntityFactory() {
 	// TODO Auto-generated constructor stub
 
@@ -27,4 +29,14 @@ EntityRef EntityFactory::create(const std::string& name) {
 		return creators.at(name)();
 	}
 	return nullptr;
+}
+
+void EntityFactory::registerLua(lua_State *l) {
+	luabridge::getGlobalNamespace(l)
+		.beginNamespace(DEFAULT_NAMESPACE)
+			.beginClass<EntityFactory>("EntityFactory")
+				.addFunction("registerPrototype", &EntityFactory::registerPrototype)
+				.addFunction("create", &EntityFactory::create)
+			.endClass()
+		.endNamespace();
 }
