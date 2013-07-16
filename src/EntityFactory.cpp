@@ -7,7 +7,7 @@
 
 #include "EntityFactory.h"
 
-LUA_CLASS_REGISTER(EntityFactory);
+LUA_REG_TYPE(EntityFactory);
 
 EntityFactory::EntityFactory() {
 	// TODO Auto-generated constructor stub

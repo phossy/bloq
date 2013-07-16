@@ -7,7 +7,7 @@
 
 #include "Entity.h"
 
-LUA_CLASS_REGISTER(Entity);
+LUA_REG_TYPE(Entity);
 
 Entity::Entity() : x(0), y(0) {
 }

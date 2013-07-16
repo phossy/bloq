@@ -18,7 +18,7 @@
 class SpriteEntity;
 typedef std::shared_ptr<SpriteEntity> SpriteEntityRef;
 
-class SpriteEntity: public Entity, public ITimerCallback, LUA_DERIVED_CLASS(SpriteEntity) {
+class SpriteEntity: public Entity, public ITimerCallback, public ILuaClass<SpriteEntity> {
 public:
 	SpriteEntity();
 	SpriteEntity(std::initializer_list<BitmapRef> bmps);
@@ -36,5 +36,7 @@ protected:
 	int frame;
 	std::vector<BitmapRef> bitmaps;
 };
+
+LUA_MAKE_REF(SpriteEntity);
 
 #endif /* SPRITEENTITY_H_ */

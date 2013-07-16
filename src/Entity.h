@@ -15,7 +15,7 @@
 class Entity;
 typedef std::shared_ptr<Entity> EntityRef;
 
-class Entity : LUA_CLASS(Entity) {
+class Entity : public ILuaClass<Entity> {
 public:
 	Entity();
 	virtual ~Entity();
@@ -26,13 +26,12 @@ public:
 	virtual int getH() const;
 	virtual void draw(GraphicsSurfaceRef s, int offx, int offy);
 	
-	LUA_CLASS_GET_SHARED(Entity);
 	static void registerLua(lua_State* l);
 protected:
 	int x;
 	int y;
 };
 
-LUA_CLASS_SHARED_DEF(Entity);
+LUA_MAKE_REF(Entity);
 
 #endif /* ENTITY_H_ */

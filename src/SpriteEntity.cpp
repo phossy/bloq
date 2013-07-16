@@ -8,9 +8,7 @@
 #include "SpriteEntity.h"
 #include "Log.h"
 
-LUA_CLASS_REGISTER(SpriteEntity);
-
-
+LUA_REG_TYPE(SpriteEntity);
 
 SpriteEntity::SpriteEntity() : frame(0) {
 }
@@ -19,17 +17,11 @@ SpriteEntity::SpriteEntity(std::initializer_list<BitmapRef> bmps) : frame(0), bi
 }
 
 SpriteEntity::SpriteEntity(lua_State *l) : frame(0) {
-	/*for (auto &b : bmps) {
-		bitmaps.push_back(b);
-	}*/
 	int n = lua_gettop(l);
 	Log::info("SpriteEntity::SpriteEntity(lua_State*): got %d args", n);
-	for (int i = 2; i <= n; i++) {
+	for (int i = 2; i < n; i++) {
 		Log::info("%d", i);
 		BitmapRef b = luabridge::Stack<BitmapRef>::get(l, i);
-		//luabridge::LuaRef r = luabridge::Stack<luabridge::LuaRef>::get(l, i);
-		//BitmapRef b = r.cast<BitmapRef>();
-		Log::info("pushing a b");
 		bitmaps.push_back(b);
 	}
 }
@@ -42,9 +34,9 @@ void SpriteEntity::registerLua(lua_State *l) {
 	luabridge::getGlobalNamespace(l)
 		.beginNamespace(DEFAULT_NAMESPACE)
 		.deriveClass<SpriteEntity, Entity>("SpriteEntity")
-			.addConstructor<void(*)()>()
+			.addConstructor<void(*)(), SpriteEntityRef>()
 			//.addConstructor<void(*)(std::initializer_list<BitmapRef>)>()
-			.addConstructor<void(*)(lua_State*)>()
+			.addConstructor<void(*)(lua_State*), SpriteEntityRef>()
 			.addFunction("addBitmap", &SpriteEntity::addBitmap)
 		.endClass()
 	.endNamespace();

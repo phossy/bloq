@@ -9,10 +9,10 @@
 #include <SDL2/SDL_image.h>
 #include "Log.h"
 
-LUA_CLASS_REGISTER(Bitmap);
+LUA_REG_TYPE(Bitmap);
 
 Bitmap::Bitmap(const std::string& path) : Asset(path) {
-	Log::info("Bitmap::Bitmap(%s)", path.c_str());
+	Log::info("Bitmap::Bitmap(%s) = %p", path.c_str(), this);
 	surface = IMG_Load_RW(file, 0);
 	if (surface == NULL) {
 		throw IMG_GetError();
@@ -35,7 +35,7 @@ void Bitmap::registerLua(lua_State *l) {
 	luabridge::getGlobalNamespace(l)
 		.beginNamespace(DEFAULT_NAMESPACE)
 			.deriveClass<Bitmap, Asset>("Bitmap")
-				.addConstructor<void(*)(const std::string&)>()
+				.addConstructor<void(*)(const std::string&), BitmapRef>()
 				.addProperty("w", &Bitmap::getW)
 				.addProperty("h", &Bitmap::getH)
 			.endClass()

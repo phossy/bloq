@@ -7,7 +7,7 @@
 
 #include "World.h"
 
-LUA_CLASS_REGISTER(World);
+LUA_REG_TYPE(World);
 
 World::World() {
 	entFactory = std::make_shared<EntityFactory>();

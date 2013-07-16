@@ -20,7 +20,7 @@ typedef std::shared_ptr<EntityFactory> EntityFactoryRef;
 
 typedef std::function<EntityRef() > EntityPrototype;
 
-class EntityFactory : LUA_CLASS(EntityFactory) {
+class EntityFactory : public ILuaClass<EntityFactory> {
 public:
 	EntityFactory();
 	virtual ~EntityFactory();
@@ -28,12 +28,11 @@ public:
 	void registerPrototype(const std::string& name, EntityPrototype creator);
 	EntityRef create(const std::string& name);
 
-	LUA_CLASS_GET_SHARED(EntityFactory);
 	static void registerLua(lua_State *l);
 private:
 	std::map<const std::string, EntityPrototype> creators;
 };
 
-LUA_CLASS_SHARED_DEF(EntityFactory);
+LUA_MAKE_REF(EntityFactory);
 
 #endif /* ENTITYFACTORY_H_ */

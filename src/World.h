@@ -19,7 +19,7 @@
 class World;
 typedef std::shared_ptr<World> WorldRef;
 
-class World : LUA_CLASS(World) {
+class World : public ILuaClass<World> {
 public:
 	World();
 	virtual ~World();
@@ -33,14 +33,12 @@ public:
 
 	static void registerLua(lua_State *l);
 
-	LUA_CLASS_GET_SHARED(World);
-
 protected:
 	std::list<EntityRef> entities;
 
 	EntityFactoryRef entFactory;
 };
 
-LUA_CLASS_SHARED_DEF(World);
+LUA_MAKE_REF(World);
 
 #endif /* WORLD_H_ */

@@ -7,10 +7,11 @@
 
 #include "Asset.h"
 #include "Log.h"
-LUA_CLASS_REGISTER(Asset);
+
+LUA_REG_TYPE(Asset);
 
 Asset::Asset(const std::string& path) {
-	Log::info("Asset::Asset(%s)", path.c_str());
+	Log::info("Asset::Asset(%s) = %p", path.c_str(), this);
 	file = SDL_RWFromFile(path.c_str(), "r");
 	if (file == NULL) {
 		throw SDL_GetError();
@@ -25,7 +26,7 @@ void Asset::registerLua(lua_State *l) {
 	luabridge::getGlobalNamespace(l)
 		.beginNamespace(DEFAULT_NAMESPACE)
 			.beginClass<Asset>("Asset")
-				.addConstructor<void(*)(const std::string&)>()
+				.addConstructor<void(*)(const std::string&), AssetRef>()
 			.endClass()
 		.endNamespace();
 }
