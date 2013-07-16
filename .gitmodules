@@ -1,0 +1,3 @@
+[submodule "lib/LuaBridge"]
+	path = lib/LuaBridge
+	url = https://github.com/merlinblack/LuaBridge.git

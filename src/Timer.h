@@ -13,6 +13,9 @@ class ITimerCallback;
 #include <list>
 #include <memory>
 
+class Timer;
+typedef std::shared_ptr<Timer> TimerRef;
+
 class Timer {
 public:
 	virtual ~Timer();

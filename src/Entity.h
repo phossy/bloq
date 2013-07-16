@@ -10,20 +10,29 @@
 
 #include <memory>
 #include "GraphicsSurface.h"
+#include "ILuaClass.h"
 
-class Entity {
+class Entity;
+typedef std::shared_ptr<Entity> EntityRef;
+
+class Entity : LUA_CLASS(Entity) {
 public:
 	Entity();
 	virtual ~Entity();
-	int getX();
-	int getY();
+	int getX() const;
+	int getY() const;
 	void setPos(int nx, int ny);
-	virtual int getW();
-	virtual int getH();
-	virtual void draw(GraphicsSurface& s, int offx, int offy);
+	virtual int getW() const;
+	virtual int getH() const;
+	virtual void draw(GraphicsSurfaceRef s, int offx, int offy);
+	
+	LUA_CLASS_GET_SHARED(Entity);
+	static void registerLua(lua_State* l);
 protected:
 	int x;
 	int y;
 };
+
+LUA_CLASS_SHARED_DEF(Entity);
 
 #endif /* ENTITY_H_ */

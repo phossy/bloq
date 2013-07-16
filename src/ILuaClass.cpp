@@ -6,15 +6,25 @@
  */
 #include "ILuaClass.h"
 
-std::list<LuaRegistrationFunc>* ILuaClass::__regFuncs = nullptr;
+std::list<LuaRegisterFunc>* ILuaClass::__regFuncs = nullptr;
 
 ILuaClass::~ILuaClass() {
 	delete __regFuncs;
 }
 
-void ILuaClass::__addRegistrationFunc(LuaRegistrationFunc f) {
+void ILuaClass::__addRegFunc(LuaRegisterFunc f) {
 	if (__regFuncs == nullptr) {
-		__regFuncs = new std::list<LuaRegistrationFunc>();
+		__regFuncs = new std::list<LuaRegisterFunc>();
 	}
 	__regFuncs->push_back(f);
+}
+
+void ILuaClass::registerClasses(lua_State *l) {
+	if (__regFuncs == nullptr) {
+		return;
+	}
+	
+	for (auto &func : *__regFuncs) {
+		func(l);
+	}
 }

@@ -11,6 +11,10 @@
 #define TEST_NO_CONFIG
 
 #include <string>
+#include <memory>
+
+class Config;
+typedef std::shared_ptr<Config> ConfigRef;
 
 class Config {
 public:

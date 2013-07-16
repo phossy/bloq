@@ -17,6 +17,7 @@ lib/SDL2-2.0.0/sdl2.pc
 *.o
 *.lo
 *.la
+*.d
 lib/build
 bloq
 

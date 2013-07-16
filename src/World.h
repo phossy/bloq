@@ -25,23 +25,22 @@ public:
 	virtual ~World();
 
 	void spawnEntityAt(const std::string& type, int x, int y);
-	void addEntity(std::shared_ptr<Entity> entity);
-	void removeEntity(std::shared_ptr<Entity> entity);
-	EntityFactory& getEntityFactory();
+	void addEntity(EntityRef entity);
+	void removeEntity(EntityRef entity);
+	EntityFactoryRef getEntityFactory();
 
-	void drawArea(GraphicsSurface& s, int x, int y);
+	void drawArea(GraphicsSurfaceRef s, int x, int y);
 
-	static void registerLua(lua_State *L);
+	static void registerLua(lua_State *l);
 
-	//WorldRef get_shared() { return shared_from_this(); }
 	LUA_CLASS_GET_SHARED(World);
 
 protected:
-	std::list<std::shared_ptr<Entity> > entities;
+	std::list<EntityRef> entities;
 
-	std::unique_ptr<EntityFactory> entFactory;
+	EntityFactoryRef entFactory;
 };
 
-LUA_CLASS_DEF(World);
+LUA_CLASS_SHARED_DEF(World);
 
 #endif /* WORLD_H_ */

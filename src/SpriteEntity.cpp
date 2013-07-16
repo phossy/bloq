@@ -8,31 +8,42 @@
 #include "SpriteEntity.h"
 #include "Log.h"
 
+LUA_CLASS_REGISTER(SpriteEntity);
+
 SpriteEntity::SpriteEntity() : frame(0) {
 }
 
-SpriteEntity::SpriteEntity(std::initializer_list<std::shared_ptr<Bitmap> > bmps) : frame(0), bitmaps(bmps) {
+SpriteEntity::SpriteEntity(std::initializer_list<BitmapRef> bmps) : frame(0), bitmaps(bmps) {
 }
 
 SpriteEntity::~SpriteEntity() {
 	// TODO Auto-generated destructor stub
 }
 
+SpriteEntity::registerLua(lua_State *l) {
+	luabridge::getGlobalNamespace(l)
+		.beginNamespace(DEFAULT_NAMESPACE)
+		.deriveClass<SpriteEntity, Entity>("SpriteEntity")
+		.addFunction("addBitmap", &SpriteEntity::addBitmap)
+		.endClass()
+	.endNamespace()
+}
+
 void SpriteEntity::onTimer(int tick) {
 	frame++;
 }
 
-void SpriteEntity::addBitmap(std::shared_ptr<Bitmap> bitmap) {
+void SpriteEntity::addBitmap(BitmapRef bitmap) {
 	bitmaps.push_back(bitmap);
 }
 
-void SpriteEntity::draw(GraphicsSurface& s, int offx, int offy) {
+void SpriteEntity::draw(GraphicsSurfaceRef s, int offx, int offy) {
 	int numBitmaps = bitmaps.size();
 	int frameID = frame % numBitmaps;
-	s.drawBitmap(*bitmaps[frameID], x - offx, y - offy);
+	s->drawBitmap(bitmaps[frameID], x - offx, y - offy);
 }
 
-int SpriteEntity::getW() {
+int SpriteEntity::getW() const {
 	if (bitmaps.size() == 0) {
 		throw "Can't get width of SpriteEntity with no bitmaps";
 	}
@@ -40,7 +51,7 @@ int SpriteEntity::getW() {
 	return bitmaps[0]->getW();
 }
 
-int SpriteEntity::getH() {
+int SpriteEntity::getH() const {
 	if (bitmaps.size() == 0) {
 		throw "Can't get height of SpriteEntity with no bitmaps";
 	}

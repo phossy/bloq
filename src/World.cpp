@@ -7,12 +7,25 @@
 
 #include "World.h"
 
+LUA_CLASS_REGISTER(World);
+
 World::World() {
-	entFactory = std::unique_ptr<EntityFactory>(new EntityFactory());
+	entFactory = std::make_shared<EntityFactory>();
 }
 
 World::~World() {
 	// TODO Auto-generated destructor stub
+}
+
+void World::registerLua(lua_State *l) {
+	luabridge::getGlobalNamespace(l)
+		.beginNamespace(DEFAULT_NAMESPACE)
+		.beginClass<World>("World")
+			.addFunction("spawnEntityAt", &World::spawnEntityAt)
+			//.addFunction("addEntity", &World::addEntity)
+			//.addFunction("removeEntity", &World::removeEntity)
+		.endClass()
+	.endNamespace();
 }
 
 void World::spawnEntityAt(const std::string& type, int x, int y) {
@@ -21,21 +34,21 @@ void World::spawnEntityAt(const std::string& type, int x, int y) {
 	addEntity(pEnt);
 }
 
-void World::addEntity(std::shared_ptr<Entity> entity) {
+void World::addEntity(EntityRef entity) {
 	entities.push_back(entity);
 }
 
-void World::removeEntity(std::shared_ptr<Entity> entity) {
+void World::removeEntity(EntityRef entity) {
 	entities.remove(entity);
 }
 
-EntityFactory& World::getEntityFactory() {
-	return *entFactory;
+EntityFactoryRef World::getEntityFactory() {
+	return entFactory;
 }
 
-void World::drawArea(GraphicsSurface& s, int x, int y) {
-	int w = s.getW();
-	int h = s.getH();
+void World::drawArea(GraphicsSurfaceRef s, int x, int y) {
+	int w = s->getW();
+	int h = s->getH();
 
 	for (auto &e : entities) {
 		// bounds check to see whether part of the entity is visible on the screen
@@ -48,8 +61,4 @@ void World::drawArea(GraphicsSurface& s, int x, int y) {
 			e->draw(s, x, y);
 		}
 	}
-}
-
-void World::registerLua(lua_State *L) {
-
 }

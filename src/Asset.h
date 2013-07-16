@@ -10,6 +10,10 @@
 
 #include <SDL2/SDL_rwops.h>
 #include <string>
+#include <memory>
+
+class Asset;
+typedef std::shared_ptr<Asset> AssetRef;
 
 class Asset {
 public:

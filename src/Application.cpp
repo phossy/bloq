@@ -14,6 +14,7 @@
 
 #include "SpriteEntity.h"
 #include "World.h"
+#include "ScriptManager.h"
 
 #include <luajit-2.0/lua.hpp>
 #include <LuaBridge/LuaBridge.h>
@@ -22,7 +23,7 @@ Application::Application(int argc, char **argv) {
 	// TODO argument parsing
 
 	// Initialize config
-	config = std::unique_ptr<Config>(new Config());
+	config = std::make_shared<Config>();
 
 	// Basic SDL initialization
 	Log::info("Initializing SDL");
@@ -41,10 +42,10 @@ Application::Application(int argc, char **argv) {
 	}
 
 	// render window
-	renderWin = std::unique_ptr<RenderWindow>(new RenderWindow(config->get<int>("width"), config->get<int>("height"), config->get<bool>("fullscreen")));
+	renderWin = std::make_shared<RenderWindow>(config->get<int>("width"), config->get<int>("height"), config->get<bool>("fullscreen"));
 
 	// event timer/looper
-	timer = std::unique_ptr<Timer>(new Timer());
+	timer = std::make_shared<Timer>();
 }
 
 Application::~Application() {
@@ -54,17 +55,25 @@ Application::~Application() {
 	SDL_Quit();
 }
 
+namespace luabridge {
+	
+	template <> struct ArgList<void*> {
+		ArgList<void*>(lua_State *l) {}
+	};
+	
+	template <> struct FuncTraits<std::function<WorldRef()>* > {
+		typedef WorldRef ReturnType;
+		typedef void* Params;
+		static ReturnType call(std::function<WorldRef()>* fnptr, ArgList<Params> args) {
+			Log::info("func func func!");
+			return (*fnptr)();
+		}
+	};
+}
+
 int Application::run() {
 	// TODO more tests with lua, get rid of me
-	lua_State *L = luaL_newstate();
-	luaL_openlibs(L);
-
-	luabridge::getGlobalNamespace(L)
-		.beginNamespace("test")
-		.beginClass<World>("World")
-			.addFunction("spawnEntityAt", &World::spawnEntityAt)
-		.endClass()
-		.endNamespace();
+	ScriptManagerRef s = std::make_shared<ScriptManager>();
 
 	// TODO test remove me!!!
 	WorldRef w = std::make_shared<World>();
@@ -78,12 +87,13 @@ int Application::run() {
 		timer->schedule(*ent, 5);
 		return ent;
 	};
-	w->getEntityFactory().registerPrototype("test", entPrototype);
+	w->getEntityFactory()->registerPrototype("test", entPrototype);
 
-	Log::info("setting");
-	luabridge::LuaRef v (L, w.get());
-	luabridge::setGlobal(L, v, "w");
-	luaL_dostring(L, "w:spawnEntityAt(\"test\", 100, 100)");
+	//luabridge::LuaRef v (l, &w);
+	//std::function<WorldRef()> func = [&w]() -> WorldRef { return w; };
+	
+	s->runFile("assets/init.lua");
+	
 	//w.spawnEntityAt("test", 100, 100);
 
 	// ---------- MAIN LOOP ----------
@@ -109,7 +119,7 @@ int Application::run() {
 		timer->tick();
 
 		// Redraw
-		w->drawArea(*renderWin, 0, 0);
+		w->drawArea(renderWin, 0, 0);
 		renderWin->repaint();
 
 		int delta = SDL_GetTicks() - beginMs;

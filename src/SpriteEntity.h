@@ -11,23 +11,32 @@
 #include "Bitmap.h"
 #include "Entity.h"
 #include "ITimerCallback.h"
+#include "ILuaClass.h"
 #include <memory>
 #include <vector>
 
-class SpriteEntity: public Entity, public ITimerCallback {
+class SpriteEntity;
+typedef std::shared_ptr<SpriteEntity> SpriteEntityRef;
+
+class SpriteEntity: public Entity, public ITimerCallback, LUA_CLASS(SpriteEntity) {
 public:
 	SpriteEntity();
-	SpriteEntity(std::initializer_list<std::shared_ptr<Bitmap> > bmps);
+	SpriteEntity(std::initializer_list<BitmapRef> bmps);
 	virtual ~SpriteEntity();
-	void addBitmap(std::shared_ptr<Bitmap> bitmap);
-	virtual void draw(GraphicsSurface& s, int offx, int offy);
-	virtual int getW();
-	virtual int getH();
+	void addBitmap(BitmapRef bitmap);
+	virtual void draw(GraphicsSurfaceRef s, int offx, int offy);
+	virtual int getW() const;
+	virtual int getH() const;
 
+	void registerLua(lua_State *l);
+	LUA_CLASS_GET_SHARED(SpriteEntity);
+	
 protected:
 	virtual void onTimer(int tick);
 	int frame;
-	std::vector<std::shared_ptr<Bitmap> > bitmaps;
+	std::vector<BitmapRef> bitmaps;
 };
+
+LUA_CLASS_SHARED_DEF(SpriteEntity);
 
 #endif /* SPRITEENTITY_H_ */

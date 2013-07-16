@@ -14,6 +14,9 @@
 #include <SDL2/SDL.h>
 #include <memory>
 
+class RenderWindow;
+typedef std::shared_ptr<RenderWindow> RenderWindowRef;
+
 class RenderWindow : public GraphicsSurface {
 public:
 	RenderWindow(int w, int h, bool fullscreen);

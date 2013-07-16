@@ -7,6 +7,8 @@
 
 #include "Entity.h"
 
+LUA_CLASS_REGISTER(Entity);
+
 Entity::Entity() : x(0), y(0) {
 }
 
@@ -14,11 +16,24 @@ Entity::~Entity() {
 	// TODO Auto-generated destructor stub
 }
 
-int Entity::getX() {
+void Entity::registerLua(lua_State* l) {
+	luabridge::getGlobalNamespace(l)
+		.beginNamespace(DEFAULT_NAMESPACE)
+		.beginClass<Entity>("Entity")
+			.addProperty("x", &Entity::getX)
+			.addProperty("y", &Entity::getY)
+			.addProperty("w", &Entity::getW)
+			.addProperty("h", &Entity::getH)
+			.addFunction("setPos", &Entity::setPos)
+		.endClass()
+	.endNamespace();
+}
+
+int Entity::getX() const {
 	return x;
 }
 
-int Entity::getY() {
+int Entity::getY() const {
 	return y;
 }
 
@@ -27,14 +42,14 @@ void Entity::setPos(int nx, int ny) {
 	y = ny;
 }
 
-int Entity::getW() {
+int Entity::getW() const {
 	return 0;
 }
 
-int Entity::getH() {
+int Entity::getH() const {
 	return 0;
 }
 
-void Entity::draw(GraphicsSurface& s, int offx, int offy) {
+void Entity::draw(GraphicsSurfaceRef s, int offx, int offy) {
 	throw "Not a drawable";
 }

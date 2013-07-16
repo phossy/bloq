@@ -23,9 +23,9 @@ public:
 	int run();
 
 private:
-	std::unique_ptr<RenderWindow> renderWin;
-	std::unique_ptr<Config> config;
-	std::unique_ptr<Timer> timer;
+	RenderWindowRef renderWin;
+	ConfigRef config;
+	TimerRef timer;
 };
 
 #endif /* APPLICATION_H_ */

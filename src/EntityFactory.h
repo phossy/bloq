@@ -14,7 +14,10 @@
 #include <string>
 #include <map>
 
-typedef std::function<std::shared_ptr<Entity>() > EntityPrototype;
+class EntityFactory;
+typedef std::shared_ptr<EntityFactory> EntityFactoryRef;
+
+typedef std::function<EntityRef() > EntityPrototype;
 
 class EntityFactory {
 public:
@@ -22,7 +25,7 @@ public:
 	virtual ~EntityFactory();
 
 	void registerPrototype(const std::string& name, EntityPrototype creator);
-	std::shared_ptr<Entity> create(const std::string& name);
+	EntityRef create(const std::string& name);
 private:
 	std::map<const std::string, EntityPrototype> creators;
 };

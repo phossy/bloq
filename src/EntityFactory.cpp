@@ -22,7 +22,7 @@ void EntityFactory::registerPrototype(const std::string& name, EntityPrototype c
 	}
 }
 
-std::shared_ptr<Entity> EntityFactory::create(const std::string& name) {
+EntityRef EntityFactory::create(const std::string& name) {
 	if (creators.find(name) != creators.end()) {
 		return creators.at(name)();
 	}

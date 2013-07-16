@@ -8,10 +8,13 @@
 #ifndef BITMAP_H_
 #define BITMAP_H_
 
+#include <memory>
+class Bitmap;
+typedef std::shared_ptr<Bitmap> BitmapRef;
+
 #include "Asset.h"
 #include "GraphicsSurface.h"
 #include <SDL2/SDL.h>
-#include <memory>
 
 class Bitmap : public Asset {
 public:

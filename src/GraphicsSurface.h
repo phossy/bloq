@@ -8,17 +8,18 @@
 #ifndef GRAPHICSSURFACE_H_
 #define GRAPHICSSURFACE_H_
 
-// forward declare due to circular references
-class Bitmap;
-
 #include <SDL2/SDL.h>
 #include "Bitmap.h"
+#include <memory>
+
+class GraphicsSurface;
+typedef std::shared_ptr<GraphicsSurface> GraphicsSurfaceRef;
 
 class GraphicsSurface {
 public:
 	GraphicsSurface();
 	virtual ~GraphicsSurface();
-	void drawBitmap(const Bitmap& bmp, int x, int y);
+	void drawBitmap(BitmapRef bmp, int x, int y);
 
 	int getW();
 	int getH();

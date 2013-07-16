@@ -16,11 +16,11 @@ GraphicsSurface::~GraphicsSurface() {
 	// TODO Auto-generated destructor stub
 }
 
-void GraphicsSurface::drawBitmap(const Bitmap& bmp, int x, int y) {
+void GraphicsSurface::drawBitmap(BitmapRef bmp, int x, int y) {
 	SDL_Surface *s = getSurface();
 
 	SDL_Rect rect = {x, y, 0, 0};
-	SDL_BlitSurface(bmp.surface, NULL, s, &rect);
+	SDL_BlitSurface(bmp->surface, NULL, s, &rect);
 }
 
 int GraphicsSurface::getW() {
