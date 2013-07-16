@@ -1,0 +1,80 @@
+{
+   libGLcore
+   Memcheck:Cond
+   obj:/usr/lib/nvidia-173/libGLcore.so.173.14.35
+   ...
+}
+{
+   libGL
+   Memcheck:Cond
+   obj:/usr/lib/nvidia-173/libGL.so.173.14.35
+   ...
+}
+{
+   SDL_VideoInit_leak_in_libX11
+   Memcheck:Leak
+   fun:malloc
+   fun:strdup
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   fun:_XimSetICValueData
+   fun:_XimLocalCreateIC
+   fun:XCreateIC
+   fun:SetupWindowData
+   fun:X11_CreateWindow
+   fun:ShouldUseTextureFramebuffer
+   fun:SDL_VideoInit
+   fun:SDL_InitSubSystem
+   fun:SDL_Init
+}
+
+{
+   SDL_GL_CreateRenderer_leak_in_libX11
+   Memcheck:Leak
+   fun:malloc
+   fun:strdup
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   fun:_XimSetICValueData
+   fun:_XimLocalCreateIC
+   fun:XCreateIC
+   fun:SetupWindowData
+   fun:X11_CreateWindow
+   fun:SDL_RecreateWindow
+   fun:GL_CreateRenderer
+   fun:SDL_CreateRenderer
+   fun:SDL_CreateWindowTexture
+}
+
+{
+   X11_CreateWindow_leak_in_libX11
+   Memcheck:Leak
+   fun:malloc
+   fun:strdup
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   fun:_XimSetICValueData
+   fun:_XimLocalCreateIC
+   fun:XCreateIC
+   fun:SetupWindowData
+   fun:X11_CreateWindow
+   fun:ShouldUseTextureFramebuffer
+   fun:SDL_VideoInit
+   fun:_ZN11ApplicationC1EiPPc
+   fun:main
+}
+
+#{
+#   <insert_a_suppression_name_here>
+#   Memcheck:Leak
+#   fun:malloc
+#   fun:strdup
+#   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+#   fun:_XimSetICValueData
+#   fun:_XimLocalCreateIC
+#   fun:XCreateIC
+#   fun:SetupWindowData
+#   fun:X11_CreateWindow
+#   fun:SDL_CreateWindow
+#   fun:_ZN12RenderWindowC1Eiib
+#   fun:_ZNSt23_Sp_counted_ptr_inplaceI12RenderWindowSaIS0_ELN9__gnu_cxx12_Lock_policyE2EEC1IIiibEEES1_DpOT_
+#   fun:_ZNSt14__shared_countILN9__gnu_cxx12_Lock_policyE2EEC1I12RenderWindowSaIS4_EIiibEEESt19_Sp_make_shared_tagPT_RKT0_DpOT1_
+#}
+#

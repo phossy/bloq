@@ -68,7 +68,8 @@ namespace luabridge {
 	template <class T> struct ContainerConstructionTraits<std::shared_ptr<T> > {};
 }
 
-#define LUA_CLASS(T) public ILuaClass, public std::enable_shared_from_this<T>
+#define LUA_DERIVED_CLASS(T) public virtual ILuaClass
+#define LUA_CLASS(T) LUA_DERIVED_CLASS(T), public std::enable_shared_from_this<T>
 #define LUA_CLASS_GET_SHARED(T) inline std::shared_ptr<T> get_shared() { return shared_from_this(); }
 #define LUA_CLASS_SHARED_DEF(T) \
 	namespace luabridge { \

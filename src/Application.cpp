@@ -55,8 +55,8 @@ Application::~Application() {
 	SDL_Quit();
 }
 
+//template <class T>
 namespace luabridge {
-	
 	template <> struct ArgList<void*> {
 		ArgList<void*>(lua_State *l) {}
 	};
@@ -65,7 +65,6 @@ namespace luabridge {
 		typedef WorldRef ReturnType;
 		typedef void* Params;
 		static ReturnType call(std::function<WorldRef()>* fnptr, ArgList<Params> args) {
-			Log::info("func func func!");
 			return (*fnptr)();
 		}
 	};

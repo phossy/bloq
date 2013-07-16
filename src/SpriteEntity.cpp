@@ -8,7 +8,7 @@
 #include "SpriteEntity.h"
 #include "Log.h"
 
-LUA_CLASS_REGISTER(SpriteEntity);
+//LUA_CLASS_REGISTER(SpriteEntity);
 
 SpriteEntity::SpriteEntity() : frame(0) {
 }
@@ -20,13 +20,13 @@ SpriteEntity::~SpriteEntity() {
 	// TODO Auto-generated destructor stub
 }
 
-SpriteEntity::registerLua(lua_State *l) {
+void SpriteEntity::registerLua(lua_State *l) {
 	luabridge::getGlobalNamespace(l)
 		.beginNamespace(DEFAULT_NAMESPACE)
 		.deriveClass<SpriteEntity, Entity>("SpriteEntity")
-		.addFunction("addBitmap", &SpriteEntity::addBitmap)
+		//.addFunction("addBitmap", &SpriteEntity::addBitmap)
 		.endClass()
-	.endNamespace()
+	.endNamespace();
 }
 
 void SpriteEntity::onTimer(int tick) {

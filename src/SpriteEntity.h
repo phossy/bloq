@@ -18,7 +18,7 @@
 class SpriteEntity;
 typedef std::shared_ptr<SpriteEntity> SpriteEntityRef;
 
-class SpriteEntity: public Entity, public ITimerCallback, LUA_CLASS(SpriteEntity) {
+class SpriteEntity: public Entity, public ITimerCallback, LUA_DERIVED_CLASS(SpriteEntity) {
 public:
 	SpriteEntity();
 	SpriteEntity(std::initializer_list<BitmapRef> bmps);
@@ -28,8 +28,9 @@ public:
 	virtual int getW() const;
 	virtual int getH() const;
 
-	void registerLua(lua_State *l);
-	LUA_CLASS_GET_SHARED(SpriteEntity);
+	static void registerLua(lua_State *l);
+	//LUA_CLASS_GET_SHARED(Entity);
+	//LUA_CLASS_GET_SHARED(SpriteEntity);
 	
 protected:
 	virtual void onTimer(int tick);
@@ -37,6 +38,6 @@ protected:
 	std::vector<BitmapRef> bitmaps;
 };
 
-LUA_CLASS_SHARED_DEF(SpriteEntity);
+//LUA_CLASS_SHARED_DEF(SpriteEntity);
 
 #endif /* SPRITEENTITY_H_ */

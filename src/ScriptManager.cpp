@@ -9,6 +9,8 @@
 
 ScriptManager::ScriptManager() {
 	state = luaL_newstate();
+	// for debugging purposes
+	luaJIT_setmode(state, 0, LUAJIT_MODE_ENGINE | LUAJIT_MODE_OFF);
 	luaL_openlibs(state);
 	
 	ILuaClass::registerClasses(state);

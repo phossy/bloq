@@ -1,4 +1,4 @@
-CXXFLAGS = -O2 -g -Wall -fmessage-length=0
+CXXFLAGS = -g -Wall -fmessage-length=0
 SRCS = $(wildcard src/*.cpp)
 OBJS = $(SRCS:%.cpp=%.o)
 DEPS = $(SRCS:%.cpp=%.d)
