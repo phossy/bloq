@@ -17,7 +17,7 @@ typedef std::shared_ptr<Bitmap> BitmapRef;
 #include <SDL2/SDL.h>
 #include "ILuaClass.h"
 
-class Bitmap : public Asset, LUA_DERIVED_CLASS(Bitmap) {
+class Bitmap : public Asset, LUA_CLASS(Bitmap) {
 public:
 	Bitmap(const std::string& path);
 	virtual ~Bitmap();
@@ -25,8 +25,8 @@ public:
 	int getW() const;
 	int getH() const;
 
-	using std::enable_shared_from_this<Asset>::shared_from_this;
-	inline std::shared_ptr<Bitmap> get_shared() { return std::static_pointer_cast<Bitmap>(shared_from_this()); }
+	using my_enable_shared_from_this<Bitmap>::shared_from_this;
+	//inline std::shared_ptr<Bitmap> get_shared() { return shared_from_this(); }
 	//LUA_CLASS_GET_SHARED_BASE(Bitmap, Asset);
 
 	static void registerLua(lua_State *l);
@@ -39,7 +39,7 @@ private:
 namespace luabridge {
 	template <> struct ContainerConstructionTraits<std::shared_ptr<Bitmap> > {
 		static std::shared_ptr<Bitmap> constructContainer(Bitmap *t) {
-			return t->get_shared();
+			return t->shared_from_this();
 		}
 	};
 }

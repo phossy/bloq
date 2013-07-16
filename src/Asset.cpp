@@ -6,10 +6,11 @@
  */
 
 #include "Asset.h"
-
+#include "Log.h"
 LUA_CLASS_REGISTER(Asset);
 
 Asset::Asset(const std::string& path) {
+	Log::info("Asset::Asset(%s)", path.c_str());
 	file = SDL_RWFromFile(path.c_str(), "r");
 	if (file == NULL) {
 		throw SDL_GetError();

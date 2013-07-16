@@ -22,7 +22,9 @@ public:
 	virtual ~Asset();
 
 	static void registerLua(lua_State *l);
-	LUA_CLASS_GET_SHARED(Asset);
+	using my_enable_shared_from_this<Asset>::shared_from_this;
+	inline std::shared_ptr<Asset> get_shared() { return shared_from_this(); }
+	//LUA_CLASS_GET_SHARED(Asset);
 
 protected:
 	SDL_RWops *file;

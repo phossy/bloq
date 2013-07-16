@@ -82,15 +82,31 @@ namespace luabridge {
 	template <class T> struct ContainerConstructionTraits<std::shared_ptr<T> > {};
 }
 
-#define LUA_DERIVED_CLASS(T) public virtual ILuaClass
-#define LUA_CLASS(T) LUA_DERIVED_CLASS(T), public std::enable_shared_from_this<T>
-#define LUA_CLASS_GET_SHARED(T) inline std::shared_ptr<T> get_shared() { return shared_from_this(); }
-#define LUA_CLASS_GET_SHARED_BASE(B,A) inline std::shared_ptr<B> get_shared() { return std::static_pointer_cast<B,A>(shared_from_this()); }
+// UGH but see http://stackoverflow.com/a/12793989
+class virt_enable_shared_from_this : public std::enable_shared_from_this<virt_enable_shared_from_this> {
+public:
+	virtual ~virt_enable_shared_from_this() {}
+};
+
+template <class T> class my_enable_shared_from_this : virtual public virt_enable_shared_from_this
+{
+public:
+	std::shared_ptr<T> shared_from_this() {
+		return std::dynamic_pointer_cast<T>(virt_enable_shared_from_this::shared_from_this());
+	}
+};
+
+//#define LUA_DERIVED_CLASS(T) public virtual ILuaClass
+#define LUA_CLASS(T) /*LUA_DERIVED_CLASS(T),*/ public my_enable_shared_from_this<T>
+#define LUA_DERIVED_CLASS(T) LUA_CLASS(T)
+#define LUA_CLASS_GET_SHARED(T)
+//#define LUA_CLASS_GET_SHARED(T) inline std::shared_ptr<T> get_shared() { return shared_from_this(); }
+//#define LUA_CLASS_GET_SHARED_BASE(B,A) inline std::shared_ptr<B> get_shared() { return std::static_pointer_cast<B,A>(shared_from_this()); }
 #define LUA_CLASS_SHARED_DEF(T) \
 	namespace luabridge { \
 		template <> struct ContainerConstructionTraits<std::shared_ptr<T> > { \
 			static std::shared_ptr<T> constructContainer(T *t) { \
-				return t->get_shared(); \
+				return t->shared_from_this(); \
 			} \
 		}; \
 	}

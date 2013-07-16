@@ -7,10 +7,12 @@
 
 #include "Bitmap.h"
 #include <SDL2/SDL_image.h>
+#include "Log.h"
 
 LUA_CLASS_REGISTER(Bitmap);
 
 Bitmap::Bitmap(const std::string& path) : Asset(path) {
+	Log::info("Bitmap::Bitmap(%s)", path.c_str());
 	surface = IMG_Load_RW(file, 0);
 	if (surface == NULL) {
 		throw IMG_GetError();
