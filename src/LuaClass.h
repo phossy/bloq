@@ -1,12 +1,12 @@
 /*
- * ILuaClass.h
+ * LuaClass.h
  *
  *  Created on: Jul 15, 2013
  *      Author: jason
  */
 
-#ifndef ILUACLASS_H_
-#define ILUACLASS_H_
+#ifndef LUACLASS_H_
+#define LUACLASS_H_
 
 #include <functional>
 #include <memory>
@@ -21,21 +21,17 @@
  Define your class like so:
  Something.h:
  
- class Something : public ILuaClass<Something> {
+ class Something : public LuaClass<Something> {
  // ...
  };
- LUA_MAKE_REF(Something);
  
  Something.cpp:
  LUA_REG_TYPE(Something);
  
  This will:
  - Add your class to the list of lua classes to be registered,
- when something calls ILuaClassImpl::__registerClasses it will register
+ when something calls LuaClassImpl::__registerClasses it will register
  itself via the registerLua() method
- 
- - Create a bunch of luabridge ContainerConstructionTraits magic to handle
- std::shared_ptr going between the c++/lua side.
 */
 
 #define DEFAULT_NAMESPACE "game"
@@ -49,10 +45,9 @@ public:
 	virtual ~virt_enable_shared_from_this() {}
 };
 
-class ILuaClassImpl {
+class LuaClassImpl {
 public:
-	virtual ~ILuaClassImpl();
-	static void registerLua(lua_State *l);
+	virtual ~LuaClassImpl();
 	
 	static void __registerClasses(lua_State *l);
 	static void __addRegFunc(LuaRegisterFunc f);
@@ -60,10 +55,14 @@ private:
 	static std::list<LuaRegisterFunc>* __regFuncs;
 };
 
-template <class T> class ILuaClass : virtual public virt_enable_shared_from_this, public ILuaClassImpl {
+template <class T> class LuaClass : public virtual virt_enable_shared_from_this, public LuaClassImpl {
 public:
-	virtual ~ILuaClass() {}
+	virtual ~LuaClass() {
+		//Log::info("Managed class instance %s [%p] destroyed", typeid(this).name(), this);
+	}
 	
+	static void registerLua(lua_State *l);
+
 	std::shared_ptr<T> shared_from_this() {
 		return std::dynamic_pointer_cast<T>(virt_enable_shared_from_this::shared_from_this());
 	}
@@ -77,38 +76,31 @@ namespace luabridge {
 			return c.get();
 		}
 	};
-
-	template <class T> struct ContainerConstructionTraits<std::shared_ptr<T> > {};
-}
-
-namespace luabridge {
-	template <> struct Stack<std::function<void()> > {
-		static void push(lua_State *l, std::function<void()> f) {
-			throw "pushing std::function is not supported yet!";
+	template <class T> struct ContainerConstructionTraits<std::shared_ptr<T> > {
+		static std::shared_ptr<T> constructContainer(T *t) {
+			return ((LuaClass<T>*)t)->shared_from_this();
 		}
-		
-		static std::function<void()> get(lua_State *l, int index) {
-			assert(lua_isfunction(l, index));
-			return [=]() {
-				lua_pcall(l, index, 0, 0);
+	};
+
+	// Stack specialization for getting std::function<> from lua (so we can call lua closures from C++)
+	template <class R, class... A> struct Stack<std::function<R(A...)> > {
+		static void push(lua_State *l, std::function<R(A...)> f) {
+			throw "Pushing std::function<R(A...)> is not supported";
+		}
+		static std::function<R(A...)> get(lua_State *l, int index) {
+			LuaRef f = Stack<LuaRef>::get(l, index);
+			return [f](A... args) {
+				return f(args...);
 			};
 		}
 	};
 }
 
-#define LUA_MAKE_REF(T) \
-	namespace luabridge { \
-		template <> struct ContainerConstructionTraits<T##Ref> { \
-			static T##Ref constructContainer(T *t) { \
-				return t->ILuaClass<T>::shared_from_this(); \
-			} \
-		}; \
-	}
+// Defines the static initializer to call the registration function.
 #define LUA_REG_TYPE(T) \
-	class __luaReg##T { \
+	static class __luaReg##T { \
 	public: \
-		__luaReg##T() { Log::info("Added registration func for " #T); ILuaClass<T>::__addRegFunc(&T::registerLua); } \
-	}; \
-	static __luaReg##T __s_luaReg##T;
+		__luaReg##T() { Log::info("Added registration func for " #T); LuaClass<T>::__addRegFunc(&T::registerLua); } \
+	} __s_luaReg##T;
 
-#endif /* ILUACLASS_H_ */
+#endif /* LUACLASS_H_ */

@@ -14,17 +14,17 @@
 #include "GraphicsSurface.h"
 
 #include <memory>
-#include "ILuaClass.h"
+#include "LuaClass.h"
 
 class World;
 typedef std::shared_ptr<World> WorldRef;
 
-class World : public ILuaClass<World> {
+class World : public LuaClass<World> {
 public:
 	World();
 	virtual ~World();
 
-	void spawnEntityAt(const std::string& type, int x, int y);
+	EntityRef spawnEntityAt(const std::string& type, int x, int y);
 	void addEntity(EntityRef entity);
 	void removeEntity(EntityRef entity);
 	EntityFactoryRef getEntityFactory();
@@ -38,7 +38,5 @@ protected:
 
 	EntityFactoryRef entFactory;
 };
-
-LUA_MAKE_REF(World);
 
 #endif /* WORLD_H_ */

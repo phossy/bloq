@@ -13,7 +13,7 @@
 #include <luajit-2.0/lua.hpp>
 #include <LuaBridge/LuaBridge.h>
 
-#include "ILuaClass.h"
+#include "LuaClass.h"
 
 class ScriptManager;
 typedef std::shared_ptr<ScriptManager> ScriptManagerRef;
@@ -32,6 +32,9 @@ public:
 				.addVariable(varname.c_str(), &var, rw)
 			.endNamespace();
 	}
+
+	static void hookFunc(lua_State *l, lua_Debug *ar);
+
 private:
 	lua_State* state;
 };

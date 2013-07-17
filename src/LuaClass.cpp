@@ -1,28 +1,28 @@
 /*
- * ILuaClass.cpp
+ * LuaClass.cpp
  *
  *  Created on: Jul 15, 2013
  *      Author: jason
  */
-#include "ILuaClass.h"
+#include "LuaClass.h"
 
-std::list<LuaRegisterFunc>* ILuaClassImpl::__regFuncs = nullptr;
+std::list<LuaRegisterFunc>* LuaClassImpl::__regFuncs = nullptr;
 
-ILuaClassImpl::~ILuaClassImpl() {
+LuaClassImpl::~LuaClassImpl() {
 	if (__regFuncs != nullptr) {
 		delete __regFuncs;
 		__regFuncs = nullptr;
 	}
 }
 
-void ILuaClassImpl::__addRegFunc(LuaRegisterFunc f) {
+void LuaClassImpl::__addRegFunc(LuaRegisterFunc f) {
 	if (__regFuncs == nullptr) {
 		__regFuncs = new std::list<LuaRegisterFunc>();
 	}
 	__regFuncs->push_back(f);
 }
 
-void ILuaClassImpl::__registerClasses(lua_State *l) {
+void LuaClassImpl::__registerClasses(lua_State *l) {
 	if (__regFuncs == nullptr) {
 		return;
 	}

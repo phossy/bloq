@@ -11,7 +11,6 @@
 LUA_REG_TYPE(Asset);
 
 Asset::Asset(const std::string& path) {
-	Log::info("Asset::Asset(%s) = %p", path.c_str(), this);
 	file = SDL_RWFromFile(path.c_str(), "r");
 	if (file == NULL) {
 		throw SDL_GetError();

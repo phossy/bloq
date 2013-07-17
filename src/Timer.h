@@ -10,14 +10,14 @@
 
 #include <list>
 #include <memory>
-#include "ILuaClass.h"
+#include "LuaClass.h"
 
 class Timer;
 typedef std::shared_ptr<Timer> TimerRef;
 
 typedef std::function<void(int)> TimerCallback;
 
-class Timer : public ILuaClass<Timer> {
+class Timer : public LuaClass<Timer> {
 public:
 	virtual ~Timer();
 	Timer();
@@ -35,22 +35,5 @@ private:
 
 	int curTick;
 };
-
-namespace luabridge {
-	template <> struct Stack<TimerCallback> {
-		static void push(lua_State *l, TimerCallback f) {
-			throw "pushing TimerCallback is not supported yet!";
-		}
-		
-		static TimerCallback get(lua_State *l, int index) {
-			LuaRef func = Stack<LuaRef>::get(l, index);
-			return [=](int tick) {
-				func(tick);
-			};
-		}
-	};
-}
-
-LUA_MAKE_REF(Timer);
 
 #endif /* TIMER_H_ */

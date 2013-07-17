@@ -10,14 +10,14 @@
 
 #include "Bitmap.h"
 #include "Entity.h"
-#include "ILuaClass.h"
+#include "LuaClass.h"
 #include <memory>
 #include <vector>
 
 class SpriteEntity;
 typedef std::shared_ptr<SpriteEntity> SpriteEntityRef;
 
-class SpriteEntity: public Entity, public ILuaClass<SpriteEntity> {
+class SpriteEntity: public Entity, public LuaClass<SpriteEntity> {
 public:
 	SpriteEntity();
 	SpriteEntity(std::initializer_list<BitmapRef> bmps);
@@ -36,7 +36,5 @@ protected:
 	int frame;
 	std::vector<BitmapRef> bitmaps;
 };
-
-LUA_MAKE_REF(SpriteEntity);
 
 #endif /* SPRITEENTITY_H_ */

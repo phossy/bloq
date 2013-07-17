@@ -56,24 +56,9 @@ Application::~Application() {
 }
 
 int Application::run() {
-	// TODO more tests with lua, get rid of me
+	// TODO this can be structured differently
 	ScriptManagerRef s = std::make_shared<ScriptManager>();
-
-	// TODO test remove me!!!
 	WorldRef w = std::make_shared<World>();
-	//World w;
-	EntityPrototype entPrototype = [&]() {
-		auto ent = std::shared_ptr<SpriteEntity>(
-												 new SpriteEntity{
-													 std::make_shared<Bitmap>("assets/PlanetCute PNG/Plain Block.png"),
-													 std::make_shared<Bitmap>("assets/PlanetCute PNG/Stone Block.png")
-												 });
-		timer->schedule(5, [&ent](int tick) {
-			ent->onTimer(tick);
-		});
-		return ent;
-	};
-	w->getEntityFactory()->registerPrototype("test", entPrototype);
 
 	// Add global 'vars' to lua
 	s->addVar(DEFAULT_NAMESPACE, "world", w, false);
@@ -81,9 +66,9 @@ int Application::run() {
 	try {
 		s->runFile("assets/init.lua");
 	} catch (std::string &s) {
-		Log::info("Script threw exception: %s", s.c_str());
+		Log::warn("Script threw exception: %s", s.c_str());
 	}
-	Log::info("script done");
+	Log::info("Initialization script has finished");
 
 	// ---------- MAIN LOOP ----------
 	bool isStopping = false;

@@ -10,12 +10,12 @@
 
 #include <memory>
 #include "GraphicsSurface.h"
-#include "ILuaClass.h"
+#include "LuaClass.h"
 
 class Entity;
 typedef std::shared_ptr<Entity> EntityRef;
 
-class Entity : public ILuaClass<Entity> {
+class Entity : public LuaClass<Entity> {
 public:
 	Entity();
 	virtual ~Entity();
@@ -31,7 +31,5 @@ protected:
 	int x;
 	int y;
 };
-
-LUA_MAKE_REF(Entity);
 
 #endif /* ENTITY_H_ */

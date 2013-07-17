@@ -12,7 +12,7 @@
 LUA_REG_TYPE(Bitmap);
 
 Bitmap::Bitmap(const std::string& path) : Asset(path) {
-	Log::info("Bitmap::Bitmap(%s) = %p", path.c_str(), this);
+	Log::debug("Bitmap::Bitmap(%s) = %p", path.c_str(), this);
 	surface = IMG_Load_RW(file, 0);
 	if (surface == NULL) {
 		throw IMG_GetError();

@@ -29,10 +29,11 @@ void World::registerLua(lua_State *l) {
 	.endNamespace();
 }
 
-void World::spawnEntityAt(const std::string& type, int x, int y) {
+EntityRef World::spawnEntityAt(const std::string& type, int x, int y) {
 	auto pEnt = entFactory->create(type);
 	pEnt->setPos(x, y);
 	addEntity(pEnt);
+	return pEnt;
 }
 
 void World::addEntity(EntityRef entity) {

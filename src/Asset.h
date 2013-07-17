@@ -11,12 +11,12 @@
 #include <SDL2/SDL_rwops.h>
 #include <string>
 #include <memory>
-#include "ILuaClass.h"
+#include "LuaClass.h"
 
 class Asset;
 typedef std::shared_ptr<Asset> AssetRef;
 
-class Asset : public ILuaClass<Asset> {
+class Asset : public LuaClass<Asset> {
 public:
 	Asset(const std::string& path);
 	virtual ~Asset();
@@ -26,7 +26,5 @@ public:
 protected:
 	SDL_RWops *file;
 };
-
-LUA_MAKE_REF(Asset);
 
 #endif /* ASSET_H_ */

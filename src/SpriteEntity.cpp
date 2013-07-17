@@ -18,9 +18,8 @@ SpriteEntity::SpriteEntity(std::initializer_list<BitmapRef> bmps) : frame(0), bi
 
 SpriteEntity::SpriteEntity(lua_State *l) : frame(0) {
 	int n = lua_gettop(l);
-	Log::info("SpriteEntity::SpriteEntity(lua_State*): got %d args", n);
+	Log::debug("SpriteEntity::SpriteEntity([%d args]) = %p", n-1, this);
 	for (int i = 2; i <= n; i++) {
-		Log::info("%d", i);
 		BitmapRef b = luabridge::Stack<BitmapRef>::get(l, i);
 		bitmaps.push_back(b);
 	}
