@@ -44,8 +44,33 @@ Application::Application(int argc, char **argv) {
 	// render window
 	renderWin = std::make_shared<RenderWindow>(config->get<int>("width"), config->get<int>("height"), config->get<bool>("fullscreen"));
 
-	// event timer/looper
+	// Timer/looper
 	timer = std::make_shared<Timer>();
+
+	// Event dispatcher/handling
+	eventDisp = std::make_shared<EventDispatcher>();
+
+	// Game world object manager
+	world = std::make_shared<World>();
+
+	// Lua script execution context
+	scriptMgr = std::make_shared<ScriptManager>();
+
+	// register some lua game globals
+	scriptMgr->addVar(DEFAULT_NAMESPACE, "world", world, false);
+	scriptMgr->addVar(DEFAULT_NAMESPACE, "timer", timer, false);
+	scriptMgr->addVar(DEFAULT_NAMESPACE, "event", eventDisp, false);
+
+	// Perform game initialization
+	try {
+		// TODO
+		scriptMgr->runFile("assets/init.lua");
+	} catch (std::string &s) {
+		Log::warn("Script threw exception: %s", s.c_str());
+		throw s;
+	}
+
+	Log::info("Initialization completed");
 }
 
 Application::~Application() {
@@ -56,20 +81,6 @@ Application::~Application() {
 }
 
 int Application::run() {
-	// TODO this can be structured differently
-	ScriptManagerRef s = std::make_shared<ScriptManager>();
-	WorldRef w = std::make_shared<World>();
-
-	// Add global 'vars' to lua
-	s->addVar(DEFAULT_NAMESPACE, "world", w, false);
-	s->addVar(DEFAULT_NAMESPACE, "timer", timer, false);
-	try {
-		s->runFile("assets/init.lua");
-	} catch (std::string &s) {
-		Log::warn("Script threw exception: %s", s.c_str());
-	}
-	Log::info("Initialization script has finished");
-
 	// ---------- MAIN LOOP ----------
 	bool isStopping = false;
 	while (!isStopping) {
@@ -85,6 +96,7 @@ int Application::run() {
 				isStopping = true;
 				break;
 			default:
+				eventDisp->consumeEvent(e);
 				break;
 			}
 		}
@@ -93,7 +105,7 @@ int Application::run() {
 		timer->tick();
 
 		// Redraw
-		w->drawArea(renderWin, 0, 0);
+		world->drawArea(renderWin, 0, 0);
 		renderWin->repaint();
 
 		int delta = SDL_GetTicks() - beginMs;

@@ -11,6 +11,9 @@
 #include "RenderWindow.h"
 #include "Config.h"
 #include "Timer.h"
+#include "ScriptManager.h"
+#include "World.h"
+#include "EventDispatcher.h"
 
 #include <memory>
 
@@ -26,6 +29,9 @@ private:
 	RenderWindowRef renderWin;
 	ConfigRef config;
 	TimerRef timer;
+	ScriptManagerRef scriptMgr;
+	WorldRef world;
+	EventDispatcherRef eventDisp;
 };
 
 #endif /* APPLICATION_H_ */
