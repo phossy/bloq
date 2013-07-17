@@ -10,7 +10,6 @@
 
 #include "Bitmap.h"
 #include "Entity.h"
-#include "ITimerCallback.h"
 #include "ILuaClass.h"
 #include <memory>
 #include <vector>
@@ -18,7 +17,7 @@
 class SpriteEntity;
 typedef std::shared_ptr<SpriteEntity> SpriteEntityRef;
 
-class SpriteEntity: public Entity, public ITimerCallback, public ILuaClass<SpriteEntity> {
+class SpriteEntity: public Entity, public ILuaClass<SpriteEntity> {
 public:
 	SpriteEntity();
 	SpriteEntity(std::initializer_list<BitmapRef> bmps);
@@ -28,11 +27,12 @@ public:
 	virtual void draw(GraphicsSurfaceRef s, int offx, int offy);
 	virtual int getW() const;
 	virtual int getH() const;
+	
+	void onTimer(int tick);
 
 	static void registerLua(lua_State *l);
 	
 protected:
-	virtual void onTimer(int tick);
 	int frame;
 	std::vector<BitmapRef> bitmaps;
 };

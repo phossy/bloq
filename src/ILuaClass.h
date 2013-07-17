@@ -70,6 +70,7 @@ public:
 };
 
 namespace luabridge {
+	// specialization for std::shared_ptr to allow those being passed across the C++/Lua side
 	template <class T> struct ContainerTraits<std::shared_ptr<T> > {
 		typedef T Type;
 		static T* get(std::shared_ptr<T> const& c) {
@@ -78,6 +79,21 @@ namespace luabridge {
 	};
 
 	template <class T> struct ContainerConstructionTraits<std::shared_ptr<T> > {};
+}
+
+namespace luabridge {
+	template <> struct Stack<std::function<void()> > {
+		static void push(lua_State *l, std::function<void()> f) {
+			throw "pushing std::function is not supported yet!";
+		}
+		
+		static std::function<void()> get(lua_State *l, int index) {
+			assert(lua_isfunction(l, index));
+			return [=]() {
+				lua_pcall(l, index, 0, 0);
+			};
+		}
+	};
 }
 
 #define LUA_MAKE_REF(T) \

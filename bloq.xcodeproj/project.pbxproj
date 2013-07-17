@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		964779231794E25200E82B22 /* ScriptManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScriptManager.cpp; path = src/ScriptManager.cpp; sourceTree = "<group>"; };
-		964779241794E25200E82B22 /* ScriptManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScriptManager.h; path = src/ScriptManager.h; sourceTree = "<group>"; };
 		96C5863A1791903500ED5C81 /* lib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = lib; sourceTree = "<group>"; };
 		96C5863B1791903500ED5C81 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		96C5863C1791903500ED5C81 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
@@ -19,8 +17,6 @@
 		9653AF5F178FAF4B00F3033D = {
 			isa = PBXGroup;
 			children = (
-				964779231794E25200E82B22 /* ScriptManager.cpp */,
-				964779241794E25200E82B22 /* ScriptManager.h */,
 				96C5863A1791903500ED5C81 /* lib */,
 				96C5863B1791903500ED5C81 /* Makefile */,
 				96C5863C1791903500ED5C81 /* README.md */,

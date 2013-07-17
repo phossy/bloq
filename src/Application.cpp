@@ -68,13 +68,16 @@ int Application::run() {
 													 std::make_shared<Bitmap>("assets/PlanetCute PNG/Plain Block.png"),
 													 std::make_shared<Bitmap>("assets/PlanetCute PNG/Stone Block.png")
 												 });
-		timer->schedule(*ent, 5);
+		timer->schedule(5, [&ent](int tick) {
+			ent->onTimer(tick);
+		});
 		return ent;
 	};
 	w->getEntityFactory()->registerPrototype("test", entPrototype);
 
 	// Add global 'vars' to lua
 	s->addVar(DEFAULT_NAMESPACE, "world", w, false);
+	s->addVar(DEFAULT_NAMESPACE, "timer", timer, false);
 	try {
 		s->runFile("assets/init.lua");
 	} catch (std::string &s) {
