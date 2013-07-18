@@ -30,17 +30,22 @@ Application::Application(int argc, char **argv) {
 	// Basic SDL initialization
 	Log::info("Initializing SDL");
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
-		throw SDL_GetError();
+		throw std::runtime_error(SDL_GetError());
 	}
 
 	Log::info("Initializing SDL video subsystem");
 	if (SDL_VideoInit(NULL) != 0) {
-		throw SDL_GetError();
+		throw std::runtime_error(SDL_GetError());
 	}
 
 	Log::info("Initializing SDL_image");
 	if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
-		throw IMG_GetError();
+		throw std::runtime_error(IMG_GetError());
+	}
+
+	Log::info("Initializing SDL_ttf");
+	if (TTF_Init() != 0) {
+		throw std::runtime_error(TTF_GetError());
 	}
 
 	// render window
@@ -67,9 +72,12 @@ Application::Application(int argc, char **argv) {
 	try {
 		// TODO
 		scriptMgr->runFile("assets/init.lua");
-	} catch (std::string &s) {
-		Log::warn("Script threw exception: %s", s.c_str());
-		throw s;
+	} catch (luabridge::LuaException const& e) {
+		Log::warn("Script threw LuaException: %s", e.what());
+	} catch (std::exception const& e) {
+		Log::warn("Script threw exception: %s", e.what());
+	} catch (...) {
+		Log::warn("Script threw exception");
 	}
 
 	Log::info("Initialization completed");
@@ -77,6 +85,7 @@ Application::Application(int argc, char **argv) {
 
 Application::~Application() {
 	Log::info("Shutting down");
+	TTF_Quit();
 	IMG_Quit();
 	SDL_VideoQuit();
 	SDL_Quit();

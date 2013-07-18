@@ -5,6 +5,8 @@
  *      Author: jason
  */
 
+#include <stdexcept>
+
 #include "Asset.h"
 #include "Log.h"
 
@@ -13,7 +15,7 @@ LUA_REG_TYPE(Asset);
 Asset::Asset(const std::string& path) {
 	file = SDL_RWFromFile(path.c_str(), "r");
 	if (file == NULL) {
-		throw SDL_GetError();
+		throw std::runtime_error(SDL_GetError());
 	}
 }
 

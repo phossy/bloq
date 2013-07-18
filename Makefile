@@ -6,7 +6,7 @@ CPPFLAGS += -MMD -MP
 THIRDPARTYBUILDROOT = lib/build
 INCDIRS = -I$(THIRDPARTYBUILDROOT)/include
 LIBDIRS = -L$(THIRDPARTYBUILDROOT)/lib
-LIBS = -lSDL2 -lSDL2_image -ldl -lm -lpthread -lluajit-5.1
+LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf -lfreetype -ldl -lm -lpthread -lluajit-5.1
 TARGET = bloq
 
 # Platform-specific garbage.

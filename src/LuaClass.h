@@ -8,9 +8,11 @@
 #ifndef LUACLASS_H_
 #define LUACLASS_H_
 
+#include <stdexcept>
 #include <functional>
 #include <memory>
 #include <list>
+#include <utility>
 
 #include <luajit-2.0/lua.hpp>
 #include <LuaBridge/LuaBridge.h>
@@ -84,7 +86,7 @@ namespace luabridge {
 	// (so we can call lua closures from C++) with no return value
 	template <class... A> struct Stack<std::function<void(A...)> > {
 		static void push(lua_State *l, std::function<void(A...)> f) {
-			throw "Pushing std::function<void(A...)> is not supported";
+			throw std::runtime_error("Pushing std::function<void(A...)> is not supported");
 		}
 		static std::function<void(A...)> get(lua_State *l, int index) {
 			LuaRef f = Stack<LuaRef>::get(l, index);
@@ -98,13 +100,61 @@ namespace luabridge {
 	// without the -> R, and return ...; from a void function isn't allowed)
 	template <class R, class... A> struct Stack<std::function<R(A...)> > {
 		static void push(lua_State *l, std::function<R(A...)> f) {
-			throw "Pushing std::function<R(A...)> is not supported";
+			throw std::runtime_error("Pushing std::function<R(A...)> is not supported");
 		}
 		static std::function<R(A...)> get(lua_State *l, int index) {
 			LuaRef f = Stack<LuaRef>::get(l, index);
 			return [f](A... args) -> R {
 				return f(args...);
 			};
+		}
+	};
+
+	// Specialization for std::pair<A, B> <--> indexed table
+	template <class A, class B> struct Stack<std::pair<A, B> > {
+		static void push(lua_State *l, std::pair<A, B> p) {
+			LuaRef ref = newTable(l);
+			ref[1] = p.first;
+			ref[2] = p.second;
+			Stack<LuaRef>::push(l, ref);
+		}
+		static std::pair<A, B> get(lua_State *l, int index) {
+			LuaRef t = Stack<LuaRef>::get(l, index);
+			//assert(t.isTable()); // TODO more robust error handling?
+			return std::make_pair(static_cast<A>(t[1]), static_cast<B>(t[2]));
+		}
+	};
+
+	// Specialization for std::tuple<A, B, C> <--> indexed table
+	template <class A, class B, class C> struct Stack<std::tuple<A, B, C> const&> {
+		static void push(lua_State *l, std::tuple<A, B, C> const& t) {
+			LuaRef ref = newTable(l);
+			ref[1] = std::get<0>(t);
+			ref[2] = std::get<1>(t);
+			ref[3] = std::get<2>(t);
+			Stack<LuaRef>::push(l, ref);
+		}
+		static std::tuple<A, B, C> const get(lua_State *l, int index) {
+			LuaRef t = Stack<LuaRef>::get(l, index);
+			//assert(t.isTable() && t.length() == 3); // TODO more robust error handling?
+			return std::make_tuple(static_cast<A>(t[1]), static_cast<B>(t[2]), static_cast<C>(t[3]));
+		}
+	};
+
+	// Specialization for std::tuple<A, B, C, D> (e.g. color value) <--> indexed table
+	template <class A, class B, class C, class D> struct Stack<std::tuple<A, B, C, D> const&> {
+		static void push(lua_State *l, std::tuple<A, B, C, D> const& t) {
+			LuaRef ref = newTable(l);
+			ref[1] = std::get<0>(t);
+			ref[2] = std::get<1>(t);
+			ref[3] = std::get<2>(t);
+			ref[4] = std::get<3>(t);
+			Stack<LuaRef>::push(l, ref);
+		}
+		static std::tuple<A, B, C, D> const get(lua_State *l, int index) {
+			LuaRef t = Stack<LuaRef>::get(l, index);
+			//assert(t.isTable() && t.length() == 4); // TODO more robust error handling?
+			return std::make_tuple(static_cast<A>(t[1]), static_cast<B>(t[2]), static_cast<C>(t[3]), static_cast<D>(t[4]));
 		}
 	};
 }

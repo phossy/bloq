@@ -5,8 +5,10 @@
  *      Author: jason
  */
 
-#include "Bitmap.h"
 #include <SDL2/SDL_image.h>
+#include <stdexcept>
+
+#include "Bitmap.h"
 #include "Log.h"
 
 LUA_REG_TYPE(Bitmap);
@@ -15,7 +17,7 @@ Bitmap::Bitmap(const std::string& path) : Asset(path) {
 	Log::debug("Bitmap::Bitmap(%s) = %p", path.c_str(), this);
 	surface = IMG_Load_RW(file, 0);
 	if (surface == NULL) {
-		throw IMG_GetError();
+		throw std::runtime_error(IMG_GetError());
 	}
 }
 

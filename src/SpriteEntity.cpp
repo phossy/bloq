@@ -5,6 +5,8 @@
  *      Author: jason
  */
 
+#include <stdexcept>
+
 #include "SpriteEntity.h"
 #include "Log.h"
 
@@ -58,7 +60,7 @@ void SpriteEntity::draw(GraphicsSurfaceRef s, int offx, int offy) {
 
 int SpriteEntity::getW() const {
 	if (bitmaps.size() == 0) {
-		throw "Can't get width of SpriteEntity with no bitmaps";
+		throw std::runtime_error("Can't get width of SpriteEntity with no bitmaps");
 	}
 
 	return bitmaps[0]->getW();
@@ -66,7 +68,7 @@ int SpriteEntity::getW() const {
 
 int SpriteEntity::getH() const {
 	if (bitmaps.size() == 0) {
-		throw "Can't get height of SpriteEntity with no bitmaps";
+		throw std::runtime_error("Can't get height of SpriteEntity with no bitmaps");
 	}
 
 	return bitmaps[0]->getH();

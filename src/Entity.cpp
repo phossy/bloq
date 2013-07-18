@@ -5,6 +5,8 @@
  *      Author: jason
  */
 
+#include <stdexcept>
+
 #include "Entity.h"
 
 LUA_REG_TYPE(Entity);
@@ -70,5 +72,5 @@ int Entity::getH() const {
 }
 
 void Entity::draw(GraphicsSurfaceRef s, int offx, int offy) {
-	throw "Not a drawable";
+	throw std::runtime_error("Not a drawable");
 }

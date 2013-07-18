@@ -5,6 +5,8 @@
  *      Author: jason
  */
 
+#include <stdexcept>
+
 #include "ScriptManager.h"
 
 ScriptManager::ScriptManager() {
@@ -26,15 +28,18 @@ ScriptManager::~ScriptManager() {
 void ScriptManager::runCode(const std::string& code) {
 	if (luaL_dostring(state, code.c_str()) != 0) {
 		const std::string& err = luabridge::Stack<std::string const&>::get(state, -1);
-		throw err;
+		throw std::runtime_error(err);
 	}
 }
 
 void ScriptManager::runFile(const std::string& file) {
-	if (luaL_dofile(state, file.c_str()) != 0) {
+	luaL_loadfile(state, file.c_str());
+	luabridge::LuaRef r = luabridge::LuaRef::fromStack(state, 0);
+	r();
+	/*if (luaL_dofile(state, file.c_str()) != 0) {
 		const std::string& err = luabridge::Stack<std::string const&>::get(state, -1);
-		throw err;
-	}
+		throw std::runtime_error(err);
+	}*/
 }
 
 void ScriptManager::hookFunc(lua_State *l, lua_Debug *ar) {
