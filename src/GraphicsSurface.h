@@ -9,11 +9,12 @@
 #define GRAPHICSSURFACE_H_
 
 #include <SDL2/SDL.h>
-#include "Bitmap.h"
 #include <memory>
 
 class GraphicsSurface;
 typedef std::shared_ptr<GraphicsSurface> GraphicsSurfaceRef;
+
+#include "Bitmap.h"
 
 class GraphicsSurface {
 public:

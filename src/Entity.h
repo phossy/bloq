@@ -9,11 +9,13 @@
 #define ENTITY_H_
 
 #include <memory>
-#include "GraphicsSurface.h"
-#include "LuaClass.h"
 
 class Entity;
 typedef std::shared_ptr<Entity> EntityRef;
+
+#include "GraphicsSurface.h"
+#include "LuaClass.h"
+#include "World.h"
 
 class Entity : public LuaClass<Entity> {
 public:
@@ -21,7 +23,10 @@ public:
 	virtual ~Entity();
 	int getX() const;
 	int getY() const;
+	int getZOrder() const;
 	void setPos(int nx, int ny);
+	void setZOrder(int nz);
+	void setOwner(WorldRef w);
 	virtual int getW() const;
 	virtual int getH() const;
 	virtual void draw(GraphicsSurfaceRef s, int offx, int offy);
@@ -30,6 +35,8 @@ public:
 protected:
 	int x;
 	int y;
+	int zOrder;
+	WorldRef owner;
 };
 
 #endif /* ENTITY_H_ */

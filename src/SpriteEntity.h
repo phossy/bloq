@@ -8,14 +8,15 @@
 #ifndef SPRITEENTITY_H_
 #define SPRITEENTITY_H_
 
-#include "Bitmap.h"
-#include "Entity.h"
-#include "LuaClass.h"
 #include <memory>
 #include <vector>
 
 class SpriteEntity;
 typedef std::shared_ptr<SpriteEntity> SpriteEntityRef;
+
+#include "Bitmap.h"
+#include "Entity.h"
+#include "LuaClass.h"
 
 class SpriteEntity: public Entity, public LuaClass<SpriteEntity> {
 public:

@@ -57,9 +57,7 @@ private:
 
 template <class T> class LuaClass : public virtual virt_enable_shared_from_this, public LuaClassImpl {
 public:
-	virtual ~LuaClass() {
-		//Log::info("Managed class instance %s [%p] destroyed", typeid(this).name(), this);
-	}
+	virtual ~LuaClass() {}
 	
 	static void registerLua(lua_State *l);
 
@@ -82,14 +80,29 @@ namespace luabridge {
 		}
 	};
 
-	// Stack specialization for getting std::function<> from lua (so we can call lua closures from C++)
+	// Stack specialization for getting std::function<A...> from lua
+	// (so we can call lua closures from C++) with no return value
+	template <class... A> struct Stack<std::function<void(A...)> > {
+		static void push(lua_State *l, std::function<void(A...)> f) {
+			throw "Pushing std::function<void(A...)> is not supported";
+		}
+		static std::function<void(A...)> get(lua_State *l, int index) {
+			LuaRef f = Stack<LuaRef>::get(l, index);
+			return [f](A... args) {
+				f(args...);
+			};
+		}
+	};
+	// Specialization for std::function<A...> returning an arbitrary type
+	// (Clang needs this specifically since it fails to infer the lambda return type
+	// without the -> R, and return ...; from a void function isn't allowed)
 	template <class R, class... A> struct Stack<std::function<R(A...)> > {
 		static void push(lua_State *l, std::function<R(A...)> f) {
 			throw "Pushing std::function<R(A...)> is not supported";
 		}
 		static std::function<R(A...)> get(lua_State *l, int index) {
 			LuaRef f = Stack<LuaRef>::get(l, index);
-			return [f](A... args) {
+			return [f](A... args) -> R {
 				return f(args...);
 			};
 		}

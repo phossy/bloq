@@ -13,10 +13,10 @@
 #include <luajit-2.0/lua.hpp>
 #include <LuaBridge/LuaBridge.h>
 
-#include "LuaClass.h"
-
 class ScriptManager;
 typedef std::shared_ptr<ScriptManager> ScriptManagerRef;
+
+#include "LuaClass.h"
 
 class ScriptManager {
 public:

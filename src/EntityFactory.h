@@ -8,15 +8,15 @@
 #ifndef ENTITYFACTORY_H_
 #define ENTITYFACTORY_H_
 
-#include "Entity.h"
-#include "LuaClass.h"
-
 #include <functional>
 #include <string>
 #include <map>
 
 class EntityFactory;
 typedef std::shared_ptr<EntityFactory> EntityFactoryRef;
+
+#include "Entity.h"
+#include "LuaClass.h"
 
 typedef std::function<EntityRef() > EntityPrototype;
 

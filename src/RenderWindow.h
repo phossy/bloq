@@ -10,12 +10,13 @@
 
 #define APPLICATION_NAME "APP NAME"
 
-#include "GraphicsSurface.h"
 #include <SDL2/SDL.h>
 #include <memory>
 
 class RenderWindow;
 typedef std::shared_ptr<RenderWindow> RenderWindowRef;
+
+#include "GraphicsSurface.h"
 
 class RenderWindow : public GraphicsSurface {
 public:

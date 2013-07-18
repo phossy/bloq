@@ -9,7 +9,7 @@
 
 LUA_REG_TYPE(Entity);
 
-Entity::Entity() : x(0), y(0) {
+Entity::Entity() : x(0), y(0), zOrder(0) {
 }
 
 Entity::~Entity() {
@@ -25,6 +25,7 @@ void Entity::registerLua(lua_State* l) {
 			.addProperty("w", &Entity::getW)
 			.addProperty("h", &Entity::getH)
 			.addFunction("setPos", &Entity::setPos)
+			.addFunction("setZOrder", &Entity::setZOrder)
 		.endClass()
 	.endNamespace();
 }
@@ -37,9 +38,27 @@ int Entity::getY() const {
 	return y;
 }
 
+int Entity::getZOrder() const {
+	return zOrder;
+}
+
 void Entity::setPos(int nx, int ny) {
 	x = nx;
 	y = ny;
+}
+
+void Entity::setZOrder(int nz) {
+	zOrder = nz;
+	
+	// Tell the owning world to update its draw list accordingly
+	if (owner != nullptr) {
+		owner->updateZOrder();
+	}
+}
+
+void Entity::setOwner(WorldRef w) {
+	assert(owner == nullptr || owner == w);
+	owner = w;
 }
 
 int Entity::getW() const {

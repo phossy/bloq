@@ -9,6 +9,7 @@
 #define BITMAP_H_
 
 #include <memory>
+
 class Bitmap;
 typedef std::shared_ptr<Bitmap> BitmapRef;
 

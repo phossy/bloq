@@ -8,14 +8,18 @@
 #ifndef APPLICATION_H_
 #define APPLICATION_H_
 
+#include <memory>
+
+class Application;
+typedef std::shared_ptr<Application> ApplicationRef;
+
+#include "LuaClass.h"
 #include "RenderWindow.h"
 #include "Config.h"
 #include "Timer.h"
 #include "ScriptManager.h"
 #include "World.h"
 #include "EventDispatcher.h"
-
-#include <memory>
 
 #define TICK 100
 
@@ -24,7 +28,10 @@ public:
 	Application(int argc, char **argv);
 	virtual ~Application();
 	int run();
-
+	
+	static void quit();
+	
+	static void registerLua(lua_State *l);
 private:
 	RenderWindowRef renderWin;
 	ConfigRef config;

@@ -19,6 +19,8 @@
 #include <luajit-2.0/lua.hpp>
 #include <LuaBridge/LuaBridge.h>
 
+LUA_REG_TYPE(Application);
+
 Application::Application(int argc, char **argv) {
 	// TODO argument parsing
 
@@ -80,6 +82,13 @@ Application::~Application() {
 	SDL_Quit();
 }
 
+void Application::registerLua(lua_State *l) {
+	luabridge::getGlobalNamespace(l)
+		.beginNamespace(DEFAULT_NAMESPACE)
+			.addFunction("quit", &Application::quit)
+	.endNamespace();
+}
+
 int Application::run() {
 	// ---------- MAIN LOOP ----------
 	bool isStopping = false;
@@ -119,4 +128,11 @@ int Application::run() {
 
 	// ----------
 	return 0;
+}
+
+void Application::quit() {
+	// Manually push a quit event into the queue to make the run loop exit
+	SDL_Event e;
+	e.type = SDL_QUIT;
+	SDL_PushEvent(&e);
 }

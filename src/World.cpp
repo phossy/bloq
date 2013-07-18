@@ -29,19 +29,28 @@ void World::registerLua(lua_State *l) {
 	.endNamespace();
 }
 
-EntityRef World::spawnEntityAt(const std::string& type, int x, int y) {
+EntityRef World::spawnEntityAt(const std::string& type, int x, int y, int zOrder) {
 	auto pEnt = entFactory->create(type);
-	pEnt->setPos(x, y);
 	addEntity(pEnt);
+	
+	// Note that we add the entity before setting x/y/z, so we get registered as the owner
+	// causing it to refresh the z-order when we call setZOrder() below
+	pEnt->setPos(x, y);
+	pEnt->setZOrder(zOrder); // causes z-order refresh
 	return pEnt;
 }
 
 void World::addEntity(EntityRef entity) {
+	entity->setOwner(shared_from_this());
+	// update z-order accordingly
+	updateZOrder();
+	
 	entities.push_back(entity);
 }
 
 void World::removeEntity(EntityRef entity) {
 	entities.remove(entity);
+	entity->setOwner(nullptr);
 }
 
 EntityFactoryRef World::getEntityFactory() {
@@ -63,4 +72,14 @@ void World::drawArea(GraphicsSurfaceRef s, int x, int y) {
 			e->draw(s, x, y);
 		}
 	}
+}
+
+/**
+ Typically, this would be called by Entity when it updates its z-order to cause
+ the World to re-sort its list appropriately.
+ */
+void World::updateZOrder() {
+	entities.sort([&](EntityRef first, EntityRef second) -> bool {
+		return (first->getZOrder() < second->getZOrder());
+	});
 }

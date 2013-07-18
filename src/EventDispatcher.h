@@ -8,7 +8,6 @@
 #ifndef EVENTDISPATCHER_H_
 #define EVENTDISPATCHER_H_
 
-#include "LuaClass.h"
 #include <SDL2/SDL.h>
 #include <memory>
 #include <vector>
@@ -16,7 +15,9 @@
 class EventDispatcher;
 typedef std::shared_ptr<EventDispatcher> EventDispatcherRef;
 
-typedef std::function<void(std::string&, bool)> KeyListenerDelegate;
+#include "LuaClass.h"
+
+typedef std::function<void(const std::string&, bool)> KeyListenerDelegate;
 
 class EventDispatcher : public LuaClass<EventDispatcher> {
 public:

@@ -11,10 +11,11 @@
 #include <SDL2/SDL_rwops.h>
 #include <string>
 #include <memory>
-#include "LuaClass.h"
 
 class Asset;
 typedef std::shared_ptr<Asset> AssetRef;
+
+#include "LuaClass.h"
 
 class Asset : public LuaClass<Asset> {
 public:

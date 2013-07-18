@@ -10,10 +10,11 @@
 
 #include <list>
 #include <memory>
-#include "LuaClass.h"
 
 class Timer;
 typedef std::shared_ptr<Timer> TimerRef;
+
+#include "LuaClass.h"
 
 typedef std::function<void(int)> TimerCallback;
 

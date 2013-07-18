@@ -8,31 +8,31 @@
 #ifndef WORLD_H_
 #define WORLD_H_
 
-#include <list>
-#include "Entity.h"
-#include "EntityFactory.h"
-#include "GraphicsSurface.h"
-
 #include <memory>
-#include "LuaClass.h"
+#include <list>
 
 class World;
 typedef std::shared_ptr<World> WorldRef;
+
+#include "LuaClass.h"
+#include "Entity.h"
+#include "EntityFactory.h"
+#include "GraphicsSurface.h"
 
 class World : public LuaClass<World> {
 public:
 	World();
 	virtual ~World();
 
-	EntityRef spawnEntityAt(const std::string& type, int x, int y);
+	EntityRef spawnEntityAt(const std::string& type, int x, int y, int zOrder);
 	void addEntity(EntityRef entity);
 	void removeEntity(EntityRef entity);
 	EntityFactoryRef getEntityFactory();
-
 	void drawArea(GraphicsSurfaceRef s, int x, int y);
+	void updateZOrder();
 
 	static void registerLua(lua_State *l);
-
+	
 protected:
 	std::list<EntityRef> entities;
 
