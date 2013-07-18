@@ -8,6 +8,7 @@
 #ifndef ENTITYFACTORY_H_
 #define ENTITYFACTORY_H_
 
+#include <memory>
 #include <functional>
 #include <string>
 #include <map>

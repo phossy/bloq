@@ -8,6 +8,7 @@
 #ifndef SCRIPTMANAGER_H_
 #define SCRIPTMANAGER_H_
 
+#include <memory>
 #include <string>
 
 #include <luajit-2.0/lua.hpp>

@@ -53,7 +53,7 @@ $(LUAJIT_TARGET): $(LUAJIT_DIR)
 	[ -f $@ ] || $(MAKE) -C $< install PREFIX=$(CURDIR)/$(OUTDIR)
 
 $(LUABRIDGE_TARGET): $(LUABRIDGE_DIR)
-	cp -r $< $@
+	ln -s $(CURDIR)/$< $@
 
 clean:
 	-$(MAKE) -C $(SDL_DIR) distclean
