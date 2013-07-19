@@ -27,7 +27,7 @@ public:
 	EntityRef spawnEntityAt(const std::string& type, int x, int y, int zOrder);
 	void addEntity(EntityRef entity);
 	void removeEntity(EntityRef entity);
-	EntityFactoryRef getEntityFactory();
+	EntityFactoryRef getEntityFactory() const;
 	void drawArea(GraphicsSurfaceRef s, int x, int y);
 	void updateZOrder();
 

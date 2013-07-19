@@ -10,7 +10,9 @@
 #include "RenderWindow.h"
 #include "Log.h"
 
-RenderWindow::RenderWindow(int w, int h, bool fullscreen) {
+LUA_REG_TYPE(RenderWindow);
+
+RenderWindow::RenderWindow(int w, int h, bool fullscreen) : viewX(0), viewY(0) {
 	// create the window
 	window = SDL_CreateWindow(APPLICATION_NAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
 	if (window == NULL) {
@@ -31,10 +33,37 @@ RenderWindow::~RenderWindow() {
 	SDL_DestroyWindow(window);
 }
 
+void RenderWindow::registerLua(lua_State *l) {
+	luabridge::getGlobalNamespace(l)
+		.beginNamespace(DEFAULT_NAMESPACE)
+			.deriveClass<RenderWindow, GraphicsSurface>("RenderWindow")
+				.addFunction("repaint", &RenderWindow::repaint)
+				.addProperty("viewX", &RenderWindow::getViewX, &RenderWindow::setViewX)
+				.addProperty("viewY", &RenderWindow::getViewY, &RenderWindow::setViewY)
+			.endClass()
+	.endNamespace();
+}
+
 void RenderWindow::repaint() {
 	SDL_UpdateWindowSurface(window);
 }
 
-SDL_Surface* RenderWindow::getSurface() {
+SDL_Surface* RenderWindow::getSurface() const {
 	return SDL_GetWindowSurface(window);
+}
+
+int RenderWindow::getViewX() const {
+	return viewX;
+}
+
+int RenderWindow::getViewY() const {
+	return viewY;
+}
+
+void RenderWindow::setViewX(int x) {
+	viewX = x;
+}
+
+void RenderWindow::setViewY(int y) {
+	viewY = y;
 }

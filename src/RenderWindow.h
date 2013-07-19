@@ -16,17 +16,26 @@
 class RenderWindow;
 typedef std::shared_ptr<RenderWindow> RenderWindowRef;
 
+#include "LuaClass.h"
 #include "GraphicsSurface.h"
 
-class RenderWindow : public GraphicsSurface {
+class RenderWindow : public GraphicsSurface, public LuaClass<RenderWindow> {
 public:
 	RenderWindow(int w, int h, bool fullscreen);
 	virtual ~RenderWindow();
 	virtual void repaint();
-
+	
+	int getViewX() const;
+	int getViewY() const;
+	void setViewX(int x);
+	void setViewY(int y);
+	
+	static void registerLua(lua_State *l);
 protected:
-	virtual SDL_Surface* getSurface();
+	virtual SDL_Surface* getSurface() const;
 private:
+	int viewX, viewY;
+	
 	SDL_Window* window;
 	//SDL_Renderer* renderer;
 };

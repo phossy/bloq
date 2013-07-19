@@ -9,6 +9,8 @@
 #define APPLICATION_H_
 
 #include <memory>
+#include <vector>
+#include <string>
 
 class Application;
 typedef std::shared_ptr<Application> ApplicationRef;
@@ -28,7 +30,6 @@ public:
 	Application(int argc, char **argv);
 	virtual ~Application();
 	int run();
-	
 	static void quit();
 	
 	static void registerLua(lua_State *l);
@@ -39,6 +40,8 @@ private:
 	ScriptManagerRef scriptMgr;
 	WorldRef world;
 	EventDispatcherRef eventDisp;
+	
+	std::vector<std::string> args;
 	
 	// This is in its own class as we need to be careful about the destruction order
 	// so that all references to objects get released and resources deleted before

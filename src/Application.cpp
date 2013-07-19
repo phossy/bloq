@@ -52,14 +52,17 @@ Application::SDLInitializer::~SDLInitializer() {
 	SDL_Quit();
 }
 
-Application::Application(int argc, char **argv) {
+Application::Application(int argc, char **argv) : args() {
 	// Initialize SDL modules. This must be done first (and last),
 	// because Lua destruction will be somewhat non-deterministic and
 	// we can't risk calls to SDL being made from objects owned by scripts
 	// after the library has been de-initialized
 	sdl = std::make_shared<SDLInitializer>();
 	
-	// TODO argument parsing
+	// get the arguments
+	for (int i = 0; i < argc; i++) {
+		args.push_back(std::string(argv[i]));
+	}
 
 	// Initialize config
 	config = std::make_shared<Config>();
@@ -81,12 +84,13 @@ Application::Application(int argc, char **argv) {
 
 	// Lua script execution context
 	scriptMgr = std::make_shared<ScriptManager>();
-
+	
 	// register some lua game globals
 	scriptMgr->addVar(DEFAULT_NAMESPACE, "world", world, false);
 	scriptMgr->addVar(DEFAULT_NAMESPACE, "timer", timer, false);
 	scriptMgr->addVar(DEFAULT_NAMESPACE, "event", eventDisp, false);
-
+	scriptMgr->addVar(DEFAULT_NAMESPACE, "window", renderWin, false);
+	
 	// Perform game initialization
 	try {
 		// TODO
@@ -98,7 +102,7 @@ Application::Application(int argc, char **argv) {
 	} catch (...) {
 		Log::warn("Script threw exception: unknown");
 	}
-
+	
 	Log::info("Initialization completed");
 }
 
@@ -138,7 +142,7 @@ int Application::run() {
 		timer->tick();
 
 		// Redraw
-		world->drawArea(renderWin, 0, 0);
+		world->drawArea(renderWin, renderWin->getViewX(), renderWin->getViewY());
 		renderWin->repaint();
 
 		int delta = SDL_GetTicks() - beginMs;

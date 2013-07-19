@@ -23,8 +23,9 @@ public:
 	virtual ~Entity();
 	int getX() const;
 	int getY() const;
+	void setX(int nx);
+	void setY(int ny);
 	int getZOrder() const;
-	void setPos(int nx, int ny);
 	void setZOrder(int nz);
 	void setOwner(WorldRef w);
 	virtual int getW() const;

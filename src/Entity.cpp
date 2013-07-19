@@ -22,12 +22,11 @@ void Entity::registerLua(lua_State* l) {
 	luabridge::getGlobalNamespace(l)
 		.beginNamespace(DEFAULT_NAMESPACE)
 		.beginClass<Entity>("Entity")
-			.addProperty("x", &Entity::getX)
-			.addProperty("y", &Entity::getY)
+			.addProperty("x", &Entity::getX, &Entity::setX)
+			.addProperty("y", &Entity::getY, &Entity::setY)
 			.addProperty("w", &Entity::getW)
 			.addProperty("h", &Entity::getH)
-			.addFunction("setPos", &Entity::setPos)
-			.addFunction("setZOrder", &Entity::setZOrder)
+			.addProperty("zOrder", &Entity::getZOrder, &Entity::setZOrder)
 		.endClass()
 	.endNamespace();
 }
@@ -44,8 +43,11 @@ int Entity::getZOrder() const {
 	return zOrder;
 }
 
-void Entity::setPos(int nx, int ny) {
+void Entity::setX(int nx) {
 	x = nx;
+}
+
+void Entity::setY(int ny) {
 	y = ny;
 }
 

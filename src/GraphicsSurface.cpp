@@ -10,6 +10,8 @@
 
 #include "GraphicsSurface.h"
 
+LUA_REG_TYPE(GraphicsSurface);
+
 #define MAKE_SDL_COLOR(t) \
 	SDL_Color{std::get<0>(t), std::get<1>(t), std::get<2>(t), std::get<3>(t)}
 
@@ -23,6 +25,20 @@ GraphicsSurface::GraphicsSurface() {
 
 GraphicsSurface::~GraphicsSurface() {
 	// TODO Auto-generated destructor stub
+}
+
+void GraphicsSurface::registerLua(lua_State *l) {
+	luabridge::getGlobalNamespace(l)
+		.beginNamespace(DEFAULT_NAMESPACE)
+			.beginClass<GraphicsSurface>("GraphicsSurface")
+				.addProperty("w", &GraphicsSurface::getW)
+				.addProperty("h", &GraphicsSurface::getH)
+			.endClass()
+			.beginNamespace("color")
+				.addVariable("BLACK", &COLOR_BLACK, false)
+				.addVariable("WHITE", &COLOR_WHITE, false)
+			.endNamespace()
+		.endNamespace();
 }
 
 void GraphicsSurface::drawBitmap(BitmapRef bmp, int x, int y) {
@@ -44,12 +60,12 @@ void GraphicsSurface::drawText(TypefaceRef font, int x, int y, const std::string
 	SDL_BlitSurface(textSurf, NULL, s, &rect);
 }
 
-int GraphicsSurface::getW() {
+int GraphicsSurface::getW() const {
 	SDL_Surface *s = getSurface();
 	return s->w;
 }
 
-int GraphicsSurface::getH() {
+int GraphicsSurface::getH() const {
 	SDL_Surface *s = getSurface();
 	return s->h;
 }

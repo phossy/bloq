@@ -140,8 +140,8 @@ namespace luabridge {
 			return std::make_tuple(static_cast<A>(t[1]), static_cast<B>(t[2]), static_cast<C>(t[3]));
 		}
 	};
-
-	// Specialization for std::tuple<A, B, C, D> (e.g. color value) <--> indexed table
+	
+	// Specialization for std::tuple<A, B, C, D> <--> indexed table
 	template <class A, class B, class C, class D> struct Stack<std::tuple<A, B, C, D> const&> {
 		static void push(lua_State *l, std::tuple<A, B, C, D> const& t) {
 			LuaRef ref = newTable(l);
@@ -155,6 +155,16 @@ namespace luabridge {
 			LuaRef t = Stack<LuaRef>::get(l, index);
 			//assert(t.isTable() && t.length() == 4); // TODO more robust error handling?
 			return std::make_tuple(static_cast<A>(t[1]), static_cast<B>(t[2]), static_cast<C>(t[3]), static_cast<D>(t[4]));
+		}
+	};
+	// Pass-by-value version of the above
+	template <class A, class B, class C, class D> struct Stack<std::tuple<A, B, C, D> > {
+		static void push(lua_State *l, std::tuple<A, B, C, D> t) {
+			Stack<std::tuple<A, B, C, D> const&>::push(l, t);
+		}
+		
+		static std::tuple<A, B, C, D> get(lua_State *l, int index) {
+			return Stack<std::tuple<A, B, C, D> const&>::get(l, index);			
 		}
 	};
 }

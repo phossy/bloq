@@ -22,7 +22,7 @@ void World::registerLua(lua_State *l) {
 		.beginNamespace(DEFAULT_NAMESPACE)
 		.beginClass<World>("World")
 			.addFunction("spawnEntityAt", &World::spawnEntityAt)
-			.addFunction("getEntityFactory", &World::getEntityFactory)
+			.addProperty("entityFactory", &World::getEntityFactory)
 			.addFunction("addEntity", &World::addEntity)
 			.addFunction("removeEntity", &World::removeEntity)
 		.endClass()
@@ -38,7 +38,8 @@ EntityRef World::spawnEntityAt(const std::string& type, int x, int y, int zOrder
 	
 	// Note that we add the entity before setting x/y/z, so we get registered as the owner
 	// causing it to refresh the z-order when we call setZOrder() below
-	pEnt->setPos(x, y);
+	pEnt->setX(x);
+	pEnt->setY(y);
 	pEnt->setZOrder(zOrder); // causes z-order refresh
 	return pEnt;
 }
@@ -56,7 +57,7 @@ void World::removeEntity(EntityRef entity) {
 	entity->setOwner(nullptr);
 }
 
-EntityFactoryRef World::getEntityFactory() {
+EntityFactoryRef World::getEntityFactory() const {
 	return entFactory;
 }
 
