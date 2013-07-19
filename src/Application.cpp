@@ -21,35 +21,54 @@
 
 LUA_REG_TYPE(Application);
 
+Application::SDLInitializer::SDLInitializer() {
+	// Basic SDL initialization
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
+		throw std::runtime_error(SDL_GetError());
+	}
+	
+	if (SDL_VideoInit(NULL) != 0) {
+		throw std::runtime_error(SDL_GetError());
+	}
+	
+	if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
+		throw std::runtime_error(IMG_GetError());
+	}
+	
+	if (TTF_Init() != 0) {
+		throw std::runtime_error(TTF_GetError());
+	}
+	
+	Log::info("SDL initialized");
+}
+
+Application::SDLInitializer::~SDLInitializer() {
+	Log::info("SDL shutting down");
+	
+	// Shut down SDL
+	TTF_Quit();
+	IMG_Quit();
+	SDL_VideoQuit();
+	SDL_Quit();
+}
+
 Application::Application(int argc, char **argv) {
+	// Initialize SDL modules. This must be done first (and last),
+	// because Lua destruction will be somewhat non-deterministic and
+	// we can't risk calls to SDL being made from objects owned by scripts
+	// after the library has been de-initialized
+	sdl = std::make_shared<SDLInitializer>();
+	
 	// TODO argument parsing
 
 	// Initialize config
 	config = std::make_shared<Config>();
 
-	// Basic SDL initialization
-	Log::info("Initializing SDL");
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
-		throw std::runtime_error(SDL_GetError());
-	}
-
-	Log::info("Initializing SDL video subsystem");
-	if (SDL_VideoInit(NULL) != 0) {
-		throw std::runtime_error(SDL_GetError());
-	}
-
-	Log::info("Initializing SDL_image");
-	if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
-		throw std::runtime_error(IMG_GetError());
-	}
-
-	Log::info("Initializing SDL_ttf");
-	if (TTF_Init() != 0) {
-		throw std::runtime_error(TTF_GetError());
-	}
-
 	// render window
-	renderWin = std::make_shared<RenderWindow>(config->get<int>("width"), config->get<int>("height"), config->get<bool>("fullscreen"));
+	renderWin = std::make_shared<RenderWindow>(
+		config->get<int>("width"),
+		config->get<int>("height"),
+		config->get<bool>("fullscreen"));
 
 	// Timer/looper
 	timer = std::make_shared<Timer>();
@@ -73,11 +92,11 @@ Application::Application(int argc, char **argv) {
 		// TODO
 		scriptMgr->runFile("assets/init.lua");
 	} catch (luabridge::LuaException const& e) {
-		Log::warn("Script threw LuaException: %s", e.what());
+		Log::warn("Script threw Lua exception: %s", e.what());
 	} catch (std::exception const& e) {
-		Log::warn("Script threw exception: %s", e.what());
+		Log::warn("Script threw C++ exception: %s", e.what());
 	} catch (...) {
-		Log::warn("Script threw exception");
+		Log::warn("Script threw exception: unknown");
 	}
 
 	Log::info("Initialization completed");
@@ -85,10 +104,6 @@ Application::Application(int argc, char **argv) {
 
 Application::~Application() {
 	Log::info("Shutting down");
-	TTF_Quit();
-	IMG_Quit();
-	SDL_VideoQuit();
-	SDL_Quit();
 }
 
 void Application::registerLua(lua_State *l) {

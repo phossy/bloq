@@ -39,6 +39,17 @@ private:
 	ScriptManagerRef scriptMgr;
 	WorldRef world;
 	EventDispatcherRef eventDisp;
+	
+	// This is in its own class as we need to be careful about the destruction order
+	// so that all references to objects get released and resources deleted before
+	// shutting down libraries such as freetype
+	class SDLInitializer {
+	public:
+		SDLInitializer();
+		virtual ~SDLInitializer();
+	};
+	typedef std::shared_ptr<SDLInitializer> SDLInitializerRef;
+	SDLInitializerRef sdl;
 };
 
 #endif /* APPLICATION_H_ */

@@ -31,6 +31,9 @@ void World::registerLua(lua_State *l) {
 
 EntityRef World::spawnEntityAt(const std::string& type, int x, int y, int zOrder) {
 	auto pEnt = entFactory->create(type);
+	if (pEnt == nullptr) {
+		throw std::runtime_error("Failed to create entity");
+	}
 	addEntity(pEnt);
 	
 	// Note that we add the entity before setting x/y/z, so we get registered as the owner

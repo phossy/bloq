@@ -23,6 +23,10 @@ void LuaClassImpl::__addRegFunc(LuaRegisterFunc f) {
 }
 
 void LuaClassImpl::__registerClasses(lua_State *l) {
+	// TODO figure out a better solution to the lua casting hack
+	// so that we don't need this
+	luabridge::Security::setHideMetatables(false);
+	
 	if (__regFuncs == nullptr) {
 		return;
 	}

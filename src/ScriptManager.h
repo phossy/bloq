@@ -37,6 +37,9 @@ public:
 	static void hookFunc(lua_State *l, lua_Debug *ar);
 
 private:
+	void luaCall();
+	void destroy();
+	
 	lua_State* state;
 };
 

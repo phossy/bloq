@@ -18,7 +18,10 @@ Typeface::Typeface(const std::string& path, int pt) : Asset(path) {
 }
 
 Typeface::~Typeface() {
-	TTF_CloseFont(font);
+	// just in case SDL_ttf is shut down before we get here
+	if (TTF_WasInit()) {
+		TTF_CloseFont(font);
+	}
 }
 
 void Typeface::registerLua(lua_State *l) {

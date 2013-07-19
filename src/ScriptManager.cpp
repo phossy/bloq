@@ -21,25 +21,34 @@ ScriptManager::ScriptManager() {
 }
 
 ScriptManager::~ScriptManager() {
-	lua_close(state);
-	state = nullptr;
+	destroy();
+}
+
+void ScriptManager::destroy() {
+	if (state != nullptr) {
+		lua_close(state);
+		state = nullptr;
+	}
 }
 
 void ScriptManager::runCode(const std::string& code) {
-	if (luaL_dostring(state, code.c_str()) != 0) {
-		const std::string& err = luabridge::Stack<std::string const&>::get(state, -1);
-		throw std::runtime_error(err);
-	}
+	luaL_loadstring(state, code.c_str());
+	luaCall();
 }
 
 void ScriptManager::runFile(const std::string& file) {
 	luaL_loadfile(state, file.c_str());
-	luabridge::LuaRef r = luabridge::LuaRef::fromStack(state, 0);
-	r();
-	/*if (luaL_dofile(state, file.c_str()) != 0) {
-		const std::string& err = luabridge::Stack<std::string const&>::get(state, -1);
-		throw std::runtime_error(err);
-	}*/
+	luaCall();
+}
+
+void ScriptManager::luaCall() {
+	if (state == nullptr) {
+		throw std::logic_error("The lua context is destroyed");
+	}
+	
+	// call whatever is on the top of the stack
+	luabridge::LuaRef f = luabridge::LuaRef::fromStack(state, 0);
+	f();
 }
 
 void ScriptManager::hookFunc(lua_State *l, lua_Debug *ar) {
