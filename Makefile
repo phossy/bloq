@@ -14,6 +14,7 @@ ifeq ($(shell uname -s),Darwin)
 # clang (OS X) uses different means to specify c++11 support
 CXXFLAGS += -std=c++11 -stdlib=libc++
 # and we have to specify all the frameworks by hand
+LIBDIRS += -L/usr/local/lib
 LIBS += -liconv -Wl,-framework,OpenGL -Wl,-framework,ForceFeedback -lobjc -Wl,-framework,Cocoa -Wl,-framework,Carbon -Wl,-framework,IOKit -Wl,-framework,CoreAudio -Wl,-framework,AudioToolbox -Wl,-framework,AudioUnit
 ifeq ($(shell uname -m),x86_64)
 # if building on 64bit OS X this is required for luajit to not segfault
