@@ -136,7 +136,10 @@ int Application::run() {
 				break;
 			}
 		}
-
+		
+		// Collision detection
+		world->checkAndNotifyCollidedEntities();
+		
 		// Tick the timer to let callbacks fire
 		timer->tick();
 

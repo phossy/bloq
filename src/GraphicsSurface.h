@@ -31,6 +31,7 @@ public:
 	virtual ~GraphicsSurface();
 	void drawBitmap(BitmapRef bmp, int x, int y);
 	void drawText(TypefaceRef font, int x, int y, const std::string& text, const RGBAColor& color);
+	void drawRect(int x, int y, int w, int h, const RGBAColor& color);
 
 	int getW() const;
 	int getH() const;

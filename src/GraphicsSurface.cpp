@@ -58,6 +58,15 @@ void GraphicsSurface::drawText(TypefaceRef font, int x, int y, const std::string
 	}
 
 	SDL_BlitSurface(textSurf, NULL, s, &rect);
+	SDL_FreeSurface(textSurf);
+}
+
+void GraphicsSurface::drawRect(int x, int y, int w, int h, const RGBAColor& color) {
+	SDL_Surface *s = getSurface();
+	SDL_Rect rect = {x, y, w, h};
+	
+	unsigned int mappedColor = SDL_MapRGBA(s->format, std::get<0>(color), std::get<1>(color), std::get<2>(color), std::get<3>(color));
+	SDL_FillRect(s, &rect, mappedColor);
 }
 
 int GraphicsSurface::getW() const {

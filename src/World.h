@@ -30,13 +30,18 @@ public:
 	EntityFactoryRef getEntityFactory() const;
 	void drawArea(GraphicsSurfaceRef s, int x, int y);
 	void updateZOrder();
+	
+	void checkAndNotifyCollidedEntities();
+	
+	bool getDrawBoundingBoxes() const;
+	void setDrawBoundingBoxes(bool on);
 
 	static void registerLua(lua_State *l);
 	
 protected:
 	std::list<EntityRef> entities;
-
 	EntityFactoryRef entFactory;
+	bool drawBoundingBoxes;
 };
 
 #endif /* WORLD_H_ */

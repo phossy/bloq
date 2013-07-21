@@ -43,7 +43,7 @@ void RenderWindow::registerLua(lua_State *l) {
 				.addFunction("repaint", &RenderWindow::repaint)
 				.addProperty("viewX", &RenderWindow::getViewX, &RenderWindow::setViewX)
 				.addProperty("viewY", &RenderWindow::getViewY, &RenderWindow::setViewY)
-				.addFunction("setTargetFps", &RenderWindow::setTargetFps)
+				.addProperty("targetFps", &RenderWindow::getTargetFps, &RenderWindow::setTargetFps)
 			.endClass()
 	.endNamespace();
 }
@@ -77,6 +77,10 @@ void RenderWindow::setViewX(int x) {
 
 void RenderWindow::setViewY(int y) {
 	viewY = y;
+}
+
+int RenderWindow::getTargetFps() const {
+	return targetFps;
 }
 
 void RenderWindow::setTargetFps(int fps) {

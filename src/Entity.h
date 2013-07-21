@@ -9,6 +9,7 @@
 #define ENTITY_H_
 
 #include <memory>
+#include <functional>
 
 class Entity;
 typedef std::shared_ptr<Entity> EntityRef;
@@ -16,6 +17,8 @@ typedef std::shared_ptr<Entity> EntityRef;
 #include "GraphicsSurface.h"
 #include "LuaClass.h"
 #include "World.h"
+
+typedef std::function<void(EntityRef collidingEntity)> EntityCollisionFunction;
 
 class Entity : public LuaClass<Entity> {
 public:
@@ -31,6 +34,24 @@ public:
 	virtual int getW() const;
 	virtual int getH() const;
 	virtual void draw(GraphicsSurfaceRef s, int offx, int offy);
+	virtual void drawBoundingBox(GraphicsSurfaceRef s, int offx, int offy);
+	
+	// bounding box for collision detection
+	int getLeftBound() const;
+	int getRightBound() const;
+	int getTopBound() const;
+	int getBottomBound() const;
+	
+	void setLeftBound(int off);
+	void setRightBound(int off);
+	void setTopBound(int off);
+	void setBottomBound(int off);
+	
+	bool isCollidable() const;
+	void setCollidable(bool on);
+	
+	EntityCollisionFunction getCollisionFunc() const;
+	void setCollisionFunc(EntityCollisionFunction f);
 	
 	static void registerLua(lua_State* l);
 protected:
@@ -38,6 +59,10 @@ protected:
 	int y;
 	int zOrder;
 	WorldRef owner;
+	int boundLeft, boundRight, boundTop, boundBottom;
+	bool collidable;
+	
+	EntityCollisionFunction collisionFunc;
 };
 
 #endif /* ENTITY_H_ */

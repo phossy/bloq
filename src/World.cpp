@@ -9,7 +9,7 @@
 
 LUA_REG_TYPE(World);
 
-World::World() {
+World::World() : drawBoundingBoxes(false) {
 	entFactory = std::make_shared<EntityFactory>();
 }
 
@@ -25,6 +25,7 @@ void World::registerLua(lua_State *l) {
 			.addProperty("entityFactory", &World::getEntityFactory)
 			.addFunction("addEntity", &World::addEntity)
 			.addFunction("removeEntity", &World::removeEntity)
+			.addProperty("drawBoundingBoxes", &World::getDrawBoundingBoxes, &World::setDrawBoundingBoxes)
 		.endClass()
 	.endNamespace();
 }
@@ -74,6 +75,11 @@ void World::drawArea(GraphicsSurfaceRef s, int x, int y) {
 			(ey >= (y - e->getH()) && ey <= (y + h))) {
 			// visible, draw it
 			e->draw(s, x, y);
+			
+			// draw bounding box for it too if so requested
+			if (drawBoundingBoxes) {
+				e->drawBoundingBox(s, x, y);
+			}
 		}
 	}
 }
@@ -86,4 +92,45 @@ void World::updateZOrder() {
 	entities.sort([&](EntityRef first, EntityRef second) -> bool {
 		return (first->getZOrder() < second->getZOrder());
 	});
+}
+
+/**
+ Called every tick to check for entities that have collided and react appropriately.
+ */
+void World::checkAndNotifyCollidedEntities() {
+	for (auto &e : entities) {
+		if (e->isCollidable()) {
+			int ex1 = e->getX() + e->getLeftBound();
+			int ey1 = e->getY() + e->getTopBound();
+			int ex2 = e->getX() + e->getW() - e->getRightBound();
+			int ey2 = e->getY() + e->getH() - e->getBottomBound();
+			
+			// scan through the list for any candidates that are touching this one
+			for (auto &c : entities) {
+				if (c != e && c->isCollidable()) {
+					// check for bounding box overlap
+					int cx1 = c->getX() + c->getLeftBound();
+					int cy1 = c->getY() + c->getTopBound();
+					int cx2 = c->getX() + c->getW() - c->getRightBound();
+					int cy2 = c->getY() + c->getH() - c->getBottomBound();
+					
+					if (ex1 <= cx2 && ex2 >= cx1 && ey1 <= cy2 && ey2 >= cy1) {
+						// collided, notify e
+						EntityCollisionFunction f = e->getCollisionFunc();
+						if (f != nullptr) {
+							f(c);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+bool World::getDrawBoundingBoxes() const {
+	return drawBoundingBoxes;
+}
+
+void World::setDrawBoundingBoxes(bool on) {
+	drawBoundingBoxes = on;
 }

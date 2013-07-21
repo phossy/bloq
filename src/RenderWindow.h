@@ -30,6 +30,7 @@ public:
 	void setViewX(int x);
 	void setViewY(int y);
 	
+	int getTargetFps() const;
 	void setTargetFps(int fps);
 	
 	static void registerLua(lua_State *l);
