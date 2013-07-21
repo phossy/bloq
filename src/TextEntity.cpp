@@ -47,7 +47,7 @@ void TextEntity::setColor(const RGBAColor& c) {
 }
 
 void TextEntity::draw(GraphicsSurfaceRef s, int offx, int offy) {
-	s->drawText(font, x, y, text, color);
+	s->drawText(font, x - offx, y - offy, text, color);
 }
 
 int TextEntity::getW() const {

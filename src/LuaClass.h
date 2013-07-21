@@ -37,6 +37,8 @@
 */
 
 #define DEFAULT_NAMESPACE "game"
+#define COLOR_NAMESPACE "color"
+#define MOUSE_NAMESPACE "mouse"
 
 typedef std::function<void (lua_State*)> LuaRegisterFunc;
 

@@ -34,7 +34,7 @@ void GraphicsSurface::registerLua(lua_State *l) {
 				.addProperty("w", &GraphicsSurface::getW)
 				.addProperty("h", &GraphicsSurface::getH)
 			.endClass()
-			.beginNamespace("color")
+			.beginNamespace(COLOR_NAMESPACE)
 				.addVariable("BLACK", &COLOR_BLACK, false)
 				.addVariable("WHITE", &COLOR_WHITE, false)
 			.endNamespace()

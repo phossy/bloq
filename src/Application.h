@@ -36,8 +36,10 @@ public:
 private:
 	RenderWindowRef renderWin;
 	ConfigRef config;
-	TimerRef timer;
 	ScriptManagerRef scriptMgr;
+	
+	// order matters here as these need to be destructed first
+	TimerRef timer;
 	WorldRef world;
 	EventDispatcherRef eventDisp;
 	

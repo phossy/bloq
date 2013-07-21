@@ -30,11 +30,13 @@ public:
 	void setViewX(int x);
 	void setViewY(int y);
 	
+	void setTargetFps(int fps);
+	
 	static void registerLua(lua_State *l);
 protected:
 	virtual SDL_Surface* getSurface() const;
 private:
-	int viewX, viewY;
+	int viewX, viewY, lastTimestamp, targetFps;
 	
 	SDL_Window* window;
 	//SDL_Renderer* renderer;

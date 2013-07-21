@@ -6,13 +6,14 @@
  */
 
 #include <stdexcept>
+#include <algorithm>
 
 #include "RenderWindow.h"
 #include "Log.h"
 
 LUA_REG_TYPE(RenderWindow);
 
-RenderWindow::RenderWindow(int w, int h, bool fullscreen) : viewX(0), viewY(0) {
+RenderWindow::RenderWindow(int w, int h, bool fullscreen) : viewX(0), viewY(0), targetFps(0) {
 	// create the window
 	window = SDL_CreateWindow(APPLICATION_NAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
 	if (window == NULL) {
@@ -24,6 +25,8 @@ RenderWindow::RenderWindow(int w, int h, bool fullscreen) : viewX(0), viewY(0) {
 	if (renderer == NULL) {
 		throw std::runtime_error(SDL_GetError());
 	}*/
+	
+	lastTimestamp = SDL_GetTicks();
 
 	Log::info("RenderWindow initialized");
 }
@@ -40,12 +43,20 @@ void RenderWindow::registerLua(lua_State *l) {
 				.addFunction("repaint", &RenderWindow::repaint)
 				.addProperty("viewX", &RenderWindow::getViewX, &RenderWindow::setViewX)
 				.addProperty("viewY", &RenderWindow::getViewY, &RenderWindow::setViewY)
+				.addFunction("setTargetFps", &RenderWindow::setTargetFps)
 			.endClass()
 	.endNamespace();
 }
 
 void RenderWindow::repaint() {
 	SDL_UpdateWindowSurface(window);
+	
+	// FPS limiter
+	if (targetFps != 0) {
+		int delta = SDL_GetTicks() - lastTimestamp;
+		SDL_Delay(std::max(0, (1000/targetFps) - delta));
+		lastTimestamp = SDL_GetTicks();
+	}
 }
 
 SDL_Surface* RenderWindow::getSurface() const {
@@ -66,4 +77,8 @@ void RenderWindow::setViewX(int x) {
 
 void RenderWindow::setViewY(int y) {
 	viewY = y;
+}
+
+void RenderWindow::setTargetFps(int fps) {
+	targetFps = fps;
 }

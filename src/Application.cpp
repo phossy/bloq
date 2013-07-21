@@ -59,6 +59,9 @@ Application::Application(int argc, char **argv) : args() {
 	// after the library has been de-initialized
 	sdl = std::make_shared<SDLInitializer>();
 	
+	// Lua script execution context
+	scriptMgr = std::make_shared<ScriptManager>();
+	
 	// get the arguments
 	for (int i = 0; i < argc; i++) {
 		args.push_back(std::string(argv[i]));
@@ -81,9 +84,6 @@ Application::Application(int argc, char **argv) : args() {
 
 	// Game world object manager
 	world = std::make_shared<World>();
-
-	// Lua script execution context
-	scriptMgr = std::make_shared<ScriptManager>();
 	
 	// register some lua game globals
 	scriptMgr->addVar(DEFAULT_NAMESPACE, "world", world, false);
@@ -120,9 +120,8 @@ void Application::registerLua(lua_State *l) {
 int Application::run() {
 	// ---------- MAIN LOOP ----------
 	bool isStopping = false;
+	
 	while (!isStopping) {
-		int beginMs = SDL_GetTicks();
-
 		SDL_Event e;
 
 		// retrieve waiting events
@@ -144,14 +143,6 @@ int Application::run() {
 		// Redraw
 		world->drawArea(renderWin, renderWin->getViewX(), renderWin->getViewY());
 		renderWin->repaint();
-
-		int delta = SDL_GetTicks() - beginMs;
-		// wait if there is still time left this tick
-		if (delta < TICK) {
-			SDL_Delay(TICK - delta);
-		} else if (delta > TICK) {
-			Log::info("Event loop slowdown: %d ms behind", delta - TICK);
-		}
 	}
 
 	// ----------

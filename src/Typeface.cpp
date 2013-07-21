@@ -111,6 +111,5 @@ std::pair<int, int> Typeface::getTextBounds(const std::string& s) {
 	if (TTF_SizeUTF8(font, s.c_str(), &w, &h) == -1) {
 		throw std::runtime_error(TTF_GetError());
 	}
-
 	return std::make_pair(w, h);
 }
