@@ -17,6 +17,13 @@ LUA_REG_TYPE(GraphicsSurface);
 
 RGBAColor COLOR_BLACK(0, 0, 0, 255);
 RGBAColor COLOR_WHITE(255, 255, 255, 255);
+RGBAColor COLOR_RED(255, 255, 0, 255);
+RGBAColor COLOR_GREEN(0, 255, 0, 255);
+RGBAColor COLOR_BLUE(0, 0, 255, 255);
+RGBAColor COLOR_CYAN(0, 255, 255, 255);
+RGBAColor COLOR_MAGENTA(255, 0, 255, 255);
+RGBAColor COLOR_YELLOW(255, 255, 0, 255);
+RGBAColor COLOR_GREY(127, 127, 127, 255);
 
 GraphicsSurface::GraphicsSurface() {
 	// TODO Auto-generated constructor stub
@@ -37,6 +44,13 @@ void GraphicsSurface::registerLua(lua_State *l) {
 			.beginNamespace(COLOR_NAMESPACE)
 				.addVariable("BLACK", &COLOR_BLACK, false)
 				.addVariable("WHITE", &COLOR_WHITE, false)
+				.addVariable("RED", &COLOR_RED, false)
+				.addVariable("GREEN", &COLOR_GREEN, false)
+				.addVariable("BLUE", &COLOR_BLUE, false)
+				.addVariable("CYAN", &COLOR_CYAN, false)
+				.addVariable("MAGENTA", &COLOR_MAGENTA, false)
+				.addVariable("YELLOW", &COLOR_YELLOW, false)
+				.addVariable("GREY", &COLOR_GREY, false)
 			.endNamespace()
 		.endNamespace();
 }
@@ -49,6 +63,10 @@ void GraphicsSurface::drawBitmap(BitmapRef bmp, int x, int y) {
 }
 
 void GraphicsSurface::drawText(TypefaceRef font, int x, int y, const std::string& text, const RGBAColor& color) {
+	if (text.length() == 0) {
+		return; // nothing to do
+	}
+	
 	SDL_Surface *s = getSurface();
 	SDL_Rect rect = {x, y, 0, 0};
 

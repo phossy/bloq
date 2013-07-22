@@ -22,6 +22,7 @@ typedef std::shared_ptr<Application> ApplicationRef;
 #include "ScriptManager.h"
 #include "World.h"
 #include "EventDispatcher.h"
+#include "Console.h"
 
 #define TICK 100
 
@@ -42,6 +43,7 @@ private:
 	TimerRef timer;
 	WorldRef world;
 	EventDispatcherRef eventDisp;
+	ConsoleRef console;
 	
 	std::vector<std::string> args;
 	

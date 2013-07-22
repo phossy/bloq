@@ -34,6 +34,8 @@ public:
 	void setItalic(bool b);
 	void setUnderline(bool b);
 	void setStrikethrough(bool b);
+	
+	int getLineHeight() const;
 
 	void clearStyles();
 

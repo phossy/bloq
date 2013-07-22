@@ -24,6 +24,13 @@ typedef std::tuple<unsigned char, unsigned char, unsigned char, unsigned char> R
 // default colors
 extern RGBAColor COLOR_BLACK;
 extern RGBAColor COLOR_WHITE;
+extern RGBAColor COLOR_RED;
+extern RGBAColor COLOR_GREEN;
+extern RGBAColor COLOR_BLUE;
+extern RGBAColor COLOR_CYAN;
+extern RGBAColor COLOR_MAGENTA;
+extern RGBAColor COLOR_YELLOW;
+extern RGBAColor COLOR_GREY;
 
 class GraphicsSurface : public LuaClass<GraphicsSurface> {
 public:

@@ -34,6 +34,7 @@ void Typeface::registerLua(lua_State *l) {
 				.addProperty("underline", &Typeface::getUnderline, &Typeface::setUnderline)
 				.addProperty("strikethrough", &Typeface::getStrikethrough, &Typeface::setStrikethrough)
 				.addFunction("clearStyles", &Typeface::clearStyles)
+				.addProperty("lineHeight", &Typeface::getLineHeight)
 				.addFunction("getTextBounds", &Typeface::getTextBounds)
 			.endClass()
 		.endNamespace();
@@ -104,6 +105,10 @@ void Typeface::clearStyles() {
 	if (style != 0) { // avoid flushing the glyph cache
 		TTF_SetFontStyle(font, 0);
 	}
+}
+
+int Typeface::getLineHeight() const {
+	return TTF_FontLineSkip(font);
 }
 
 std::pair<int, int> Typeface::getTextBounds(const std::string& s) {

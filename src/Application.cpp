@@ -85,11 +85,15 @@ Application::Application(int argc, char **argv) : args() {
 	// Game world object manager
 	world = std::make_shared<World>();
 	
+	// Scripts console
+	console = std::make_shared<Console>(scriptMgr);
+	
 	// register some lua game globals
 	scriptMgr->addVar(DEFAULT_NAMESPACE, "world", world, false);
 	scriptMgr->addVar(DEFAULT_NAMESPACE, "timer", timer, false);
 	scriptMgr->addVar(DEFAULT_NAMESPACE, "event", eventDisp, false);
 	scriptMgr->addVar(DEFAULT_NAMESPACE, "window", renderWin, false);
+	scriptMgr->addVar(DEFAULT_NAMESPACE, "console", console, false);
 	
 	// Perform game initialization
 	try {
@@ -132,7 +136,11 @@ int Application::run() {
 				isStopping = true;
 				break;
 			default:
-				eventDisp->consumeEvent(e);
+				if (console->isVisible()) { // as long as the console is visible it receives all input focus
+					console->consumeEvent(e);
+				} else {
+					eventDisp->consumeEvent(e);
+				}
 				break;
 			}
 		}
@@ -145,6 +153,10 @@ int Application::run() {
 
 		// Redraw
 		world->drawArea(renderWin, renderWin->getViewX(), renderWin->getViewY());
+		
+		// Console display (on top of everything)
+		console->draw(renderWin);
+		
 		renderWin->repaint();
 	}
 

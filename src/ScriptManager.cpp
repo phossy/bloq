@@ -34,6 +34,7 @@ void ScriptManager::destroy() {
 void ScriptManager::runCode(const std::string& code) {
 	luaL_loadstring(state, code.c_str());
 	luaCall();
+	//luaL_dostring(state, code.c_str());
 }
 
 void ScriptManager::runFile(const std::string& file) {
@@ -47,7 +48,7 @@ void ScriptManager::luaCall() {
 	}
 	
 	// call whatever is on the top of the stack
-	luabridge::LuaRef f = luabridge::LuaRef::fromStack(state, 0);
+	luabridge::LuaRef f = luabridge::LuaRef::fromStack(state, lua_gettop(state));
 	f();
 }
 
