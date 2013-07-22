@@ -11,6 +11,7 @@
 #include <memory>
 #include <functional>
 #include <string>
+#include <map>
 
 class Entity;
 typedef std::shared_ptr<Entity> EntityRef;
@@ -58,6 +59,14 @@ public:
 	EntityCollisionFunction getCollisionFunc() const;
 	void setCollisionFunc(EntityCollisionFunction f);
 	
+	// generic properties
+	const std::string& getProp(const std::string& key);
+	void setProp(const std::string& key, const std::string& value);
+	void delProp(const std::string& key);
+
+	luabridge::LuaRef getPropLua(const std::string& key, lua_State *l);
+	void setPropLua(const std::string& key, luabridge::LuaRef value);
+
 	static void registerLua(lua_State* l);
 protected:
 	int x;
@@ -68,6 +77,7 @@ protected:
 	int boundLeft, boundRight, boundTop, boundBottom;
 	bool collidable;
 	std::string type; // must be assigned
+	std::map<std::string, std::string> props;
 	
 	EntityCollisionFunction collisionFunc;
 };

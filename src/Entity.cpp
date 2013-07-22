@@ -35,6 +35,8 @@ void Entity::registerLua(lua_State* l) {
 			.addProperty("rightBound", &Entity::getRightBound, &Entity::setRightBound)
 			.addProperty("topBound", &Entity::getTopBound, &Entity::setTopBound)
 			.addProperty("bottomBound", &Entity::getBottomBound, &Entity::setBottomBound)
+			.addFunction("getProp", &Entity::getPropLua)
+			.addFunction("setProp", &Entity::setPropLua)
 		.endClass()
 	.endNamespace();
 }
@@ -167,4 +169,31 @@ EntityCollisionFunction Entity::getCollisionFunc() const {
 
 void Entity::setCollisionFunc(EntityCollisionFunction f) {
 	collisionFunc = f;
+}
+
+const std::string& Entity::getProp(const std::string& key) {
+	return props.at(key);
+}
+
+void Entity::setProp(const std::string& key, const std::string& value) {
+	props[key] = value;
+}
+
+void Entity::delProp(const std::string& key) {
+	props.erase(key);
+}
+
+luabridge::LuaRef Entity::getPropLua(const std::string& key, lua_State *l) {
+	try {
+		return luabridge::LuaRef(l, getProp(key));
+	} catch (std::out_of_range const& e) {
+		return luabridge::LuaRef(l);
+	}
+}
+void Entity::setPropLua(const std::string& key, luabridge::LuaRef value) {
+	if (value.isNil()) {
+		delProp(key);
+	} else {
+		setProp(key, value);
+	}
 }

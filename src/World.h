@@ -38,10 +38,16 @@ public:
 	bool getDrawBoundingBoxes() const;
 	void setDrawBoundingBoxes(bool on);
 
+	// overlay functions
+	void addOverlay(EntityRef entity);
+	void removeOverlay(EntityRef entity);
+	void drawOverlays(GraphicsSurfaceRef s);
+
 	static void registerLua(lua_State *l);
 	
 protected:
 	std::list<EntityRef> entities;
+	std::list<EntityRef> overlays;
 	std::list<EntityRef> removalQueue;
 	EntityFactoryRef entFactory;
 	bool drawBoundingBoxes;

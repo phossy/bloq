@@ -27,6 +27,8 @@ void World::registerLua(lua_State *l) {
 			.addFunction("addEntity", &World::addEntity)
 			.addFunction("removeEntity", &World::removeEntity)
 			.addProperty("drawBoundingBoxes", &World::getDrawBoundingBoxes, &World::setDrawBoundingBoxes)
+			.addFunction("addOverlay", &World::addOverlay)
+			.addFunction("removeOverlay", &World::removeOverlay)
 		.endClass()
 	.endNamespace();
 }
@@ -77,6 +79,15 @@ void World::removeEntity(EntityRef entity) {
 	removalQueue.push_back(entity);
 }
 
+void World::addOverlay(EntityRef entity) {
+	// add an overlay which is an entity with fixed position on the screen
+	overlays.push_back(entity);
+}
+
+void World::removeOverlay(EntityRef entity) {
+	overlays.remove(entity);
+}
+
 void World::drainRemovalQueue() {
 	// called from main loop only
 	for (auto &i : removalQueue) {
@@ -118,6 +129,12 @@ void World::drawArea(GraphicsSurfaceRef s, int x, int y) {
 				e->drawBoundingBox(s, x, y);
 			}
 		}
+	}
+}
+
+void World::drawOverlays(GraphicsSurfaceRef s) {
+	for (auto &e : overlays) {
+		e->draw(s, 0, 0); // fixed position, so the offset is always (0,0)
 	}
 }
 

@@ -158,6 +158,7 @@ int Application::run() {
 		// *** 4. Redraw
 		renderWin->drawRect(0, 0, renderWin->getW(), renderWin->getH(), COLOR_BLACK);
 		world->drawArea(renderWin, renderWin->getViewX(), renderWin->getViewY());
+		world->drawOverlays(renderWin);
 		
 		// Console display (on top of everything)
 		console->draw(renderWin);

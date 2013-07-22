@@ -68,7 +68,7 @@ void Console::consumeEvent(SDL_Event e) {
 			} catch (luabridge::LuaException const& e) {
 				Log::info("%s", e.what());
 				writeLine(COLOR_YELLOW, std::string("Lua error: ") + std::string(e.what()));
-			} catch (std::runtime_error const &e) {
+			} catch (std::exception const &e) {
 				writeLine(COLOR_YELLOW, std::string("Exception: ") + std::string(e.what()));
 			}
 			curLine = "";
@@ -117,7 +117,7 @@ void Console::clear() {
 
 void Console::writeLine(const RGBAColor& color, const std::string& buf) {
 	log.push_front(std::make_pair(color, buf));
-	while (log.size() > maxLogLines) {
+	while (log.size() > (unsigned int)maxLogLines) {
 		log.pop_back();
 	}
 }
