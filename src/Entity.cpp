@@ -11,7 +11,7 @@
 
 LUA_REG_TYPE(Entity);
 
-Entity::Entity() : x(0), y(0), zOrder(0), boundLeft(0), boundRight(0), boundTop(0), boundBottom(0), collidable(false), collisionFunc(nullptr) {
+Entity::Entity() : x(0), y(0), zOrder(0), entityId(0), boundLeft(0), boundRight(0), boundTop(0), boundBottom(0), collidable(false), type(""), collisionFunc(nullptr) {
 }
 
 Entity::~Entity() {
@@ -27,6 +27,8 @@ void Entity::registerLua(lua_State* l) {
 			.addProperty("w", &Entity::getW)
 			.addProperty("h", &Entity::getH)
 			.addProperty("zOrder", &Entity::getZOrder, &Entity::setZOrder)
+			.addProperty("id", &Entity::getId)
+			.addProperty("type", &Entity::getType)
 			.addProperty("collidable", &Entity::isCollidable, &Entity::setCollidable)
 			.addProperty("onCollision", &Entity::getCollisionFunc, &Entity::setCollisionFunc)
 			.addProperty("leftBound", &Entity::getLeftBound, &Entity::setLeftBound)
@@ -66,8 +68,23 @@ void Entity::setZOrder(int nz) {
 	}
 }
 
+int Entity::getId() const {
+	return entityId;
+}
+
+void Entity::setId(int newId) {
+	entityId = newId;
+}
+
+const std::string& Entity::getType() const {
+	return type;
+}
+
+void Entity::setType(const std::string& t) {
+	type = t;
+}
+
 void Entity::setOwner(WorldRef w) {
-	assert(owner == nullptr || owner == w);
 	owner = w;
 }
 

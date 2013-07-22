@@ -9,7 +9,7 @@
 
 LUA_REG_TYPE(EntityFactory);
 
-EntityFactory::EntityFactory() {
+EntityFactory::EntityFactory() : nextEntityId(1000) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -26,7 +26,10 @@ void EntityFactory::registerPrototype(const std::string& name, EntityPrototype c
 
 EntityRef EntityFactory::create(const std::string& name) {
 	if (creators.find(name) != creators.end()) {
-		return creators.at(name)();
+		EntityRef e = creators.at(name)();
+		e->setType(name);
+		e->setId(getNextEntityId());
+		return e;
 	}
 	return nullptr;
 }
@@ -39,4 +42,8 @@ void EntityFactory::registerLua(lua_State *l) {
 				.addFunction("create", &EntityFactory::create)
 			.endClass()
 		.endNamespace();
+}
+
+int EntityFactory::getNextEntityId() {
+	return nextEntityId++;
 }

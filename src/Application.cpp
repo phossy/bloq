@@ -128,7 +128,7 @@ int Application::run() {
 	while (!isStopping) {
 		SDL_Event e;
 
-		// retrieve waiting events
+		// *** 1. Process events
 		while (SDL_PollEvent(&e)) {
 			switch (e.type) {
 			case SDL_QUIT:
@@ -145,13 +145,18 @@ int Application::run() {
 			}
 		}
 		
+		// *** 2. World updates
 		// Collision detection
 		world->checkAndNotifyCollidedEntities();
 		
-		// Tick the timer to let callbacks fire
+		// Remove entities queued for deletion
+		world->drainRemovalQueue();
+		
+		// *** 3. Timer functions
 		timer->tick();
 
-		// Redraw
+		// *** 4. Redraw
+		renderWin->drawRect(0, 0, renderWin->getW(), renderWin->getH(), COLOR_BLACK);
 		world->drawArea(renderWin, renderWin->getViewX(), renderWin->getViewY());
 		
 		// Console display (on top of everything)

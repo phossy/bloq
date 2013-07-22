@@ -22,6 +22,7 @@ void World::registerLua(lua_State *l) {
 		.beginNamespace(DEFAULT_NAMESPACE)
 		.beginClass<World>("World")
 			.addFunction("spawnEntityAt", &World::spawnEntityAt)
+			.addFunction("findEntity", &World::findEntity)
 			.addProperty("entityFactory", &World::getEntityFactory)
 			.addFunction("addEntity", &World::addEntity)
 			.addFunction("removeEntity", &World::removeEntity)
@@ -46,6 +47,23 @@ EntityRef World::spawnEntityAt(const std::string& type, int x, int y, int zOrder
 }
 
 void World::addEntity(EntityRef entity) {
+	// can't have id = 0
+	if (entity->getId() == 0) {
+		throw std::logic_error("Entity does not have an ID assigned");
+	}
+	
+	// can't have a missing type
+	if (entity->getType().length() == 0) {
+		throw std::logic_error("Entity does not have a type assigned");
+	}
+	
+	// check for one that already exists with the same ID
+	for (auto &e : entities) {
+		if (e == entity || e->getId() == entity->getId()) {
+			throw std::logic_error("Cannot add entity with a duplicate ID");
+		}
+	}
+	
 	entity->setOwner(shared_from_this());
 	// update z-order accordingly
 	updateZOrder();
@@ -54,12 +72,31 @@ void World::addEntity(EntityRef entity) {
 }
 
 void World::removeEntity(EntityRef entity) {
-	entities.remove(entity);
-	entity->setOwner(nullptr);
+	// note this only schedules an entity for deletion in the main loop,
+	// to avoid messing with entities we may be iterating over
+	removalQueue.push_back(entity);
+}
+
+void World::drainRemovalQueue() {
+	// called from main loop only
+	for (auto &i : removalQueue) {
+		entities.remove(i);
+		i->setOwner(nullptr);
+	}
+	removalQueue.clear();
 }
 
 EntityFactoryRef World::getEntityFactory() const {
 	return entFactory;
+}
+
+EntityRef World::findEntity(int entityId) {
+	for (auto &e : entities) {
+		if (e->getId() == entityId) {
+			return e;
+		}
+	}
+	return nullptr;
 }
 
 void World::drawArea(GraphicsSurfaceRef s, int x, int y) {

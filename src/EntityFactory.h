@@ -28,10 +28,13 @@ public:
 
 	void registerPrototype(const std::string& name, EntityPrototype creator);
 	EntityRef create(const std::string& name);
+	int getNextEntityId();
 
 	static void registerLua(lua_State *l);
 private:
 	std::map<const std::string, EntityPrototype> creators;
+	
+	int nextEntityId;
 };
 
 #endif /* ENTITYFACTORY_H_ */

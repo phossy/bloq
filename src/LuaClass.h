@@ -92,6 +92,11 @@ namespace luabridge {
 		}
 		static std::function<void(A...)> get(lua_State *l, int index) {
 			LuaRef f = Stack<LuaRef>::get(l, index);
+			if (f.isNil()) {
+				return nullptr;
+			} else if (!f.isFunction()) {
+				throw std::runtime_error("Cannot cast non-function type to function");
+			}
 			return [f](A... args) {
 				f(args...);
 			};
@@ -106,6 +111,11 @@ namespace luabridge {
 		}
 		static std::function<R(A...)> get(lua_State *l, int index) {
 			LuaRef f = Stack<LuaRef>::get(l, index);
+			if (f.isNil()) {
+				return nullptr;
+			} else if (!f.isFunction()) {
+				throw std::runtime_error("Cannot cast non-function type to function");
+			}
 			return [f](A... args) -> R {
 				return f(args...);
 			};

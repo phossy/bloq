@@ -25,6 +25,7 @@ public:
 	virtual ~World();
 
 	EntityRef spawnEntityAt(const std::string& type, int x, int y, int zOrder);
+	EntityRef findEntity(int entityId);
 	void addEntity(EntityRef entity);
 	void removeEntity(EntityRef entity);
 	EntityFactoryRef getEntityFactory() const;
@@ -32,6 +33,7 @@ public:
 	void updateZOrder();
 	
 	void checkAndNotifyCollidedEntities();
+	void drainRemovalQueue();
 	
 	bool getDrawBoundingBoxes() const;
 	void setDrawBoundingBoxes(bool on);
@@ -40,6 +42,7 @@ public:
 	
 protected:
 	std::list<EntityRef> entities;
+	std::list<EntityRef> removalQueue;
 	EntityFactoryRef entFactory;
 	bool drawBoundingBoxes;
 };

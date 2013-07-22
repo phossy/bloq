@@ -10,6 +10,7 @@
 
 #include <memory>
 #include <functional>
+#include <string>
 
 class Entity;
 typedef std::shared_ptr<Entity> EntityRef;
@@ -31,6 +32,10 @@ public:
 	int getZOrder() const;
 	void setZOrder(int nz);
 	void setOwner(WorldRef w);
+	int getId() const;
+	void setId(int newId);
+	const std::string& getType() const;
+	void setType(const std::string& t);
 	virtual int getW() const;
 	virtual int getH() const;
 	virtual void draw(GraphicsSurfaceRef s, int offx, int offy);
@@ -58,9 +63,11 @@ protected:
 	int x;
 	int y;
 	int zOrder;
+	int entityId; // must be unique in a World
 	WorldRef owner;
 	int boundLeft, boundRight, boundTop, boundBottom;
 	bool collidable;
+	std::string type; // must be assigned
 	
 	EntityCollisionFunction collisionFunc;
 };
