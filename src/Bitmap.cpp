@@ -13,24 +13,38 @@
 
 LUA_REG_TYPE(Bitmap);
 
+SDL_Renderer* Bitmap::renderer = NULL;
+
 Bitmap::Bitmap(const std::string& path) : Asset(path) {
+	if (renderer == NULL) {
+		throw std::logic_error("You must call Bitmap::__setRenderer() with a valid renderer");
+	}
+
 	Log::debug("Bitmap::Bitmap(%s) = %p", path.c_str(), this);
-	surface = IMG_Load_RW(file, 0);
+	SDL_Surface* surface = IMG_Load_RW(file, 0);
 	if (surface == NULL) {
 		throw std::runtime_error(IMG_GetError());
+	}
+	w = surface->w;
+	h = surface->h;
+
+	texture = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_FreeSurface(surface);
+	if (texture == NULL) {
+		throw std::runtime_error(SDL_GetError());
 	}
 }
 
 Bitmap::~Bitmap() {
-	SDL_FreeSurface(surface);
+	SDL_DestroyTexture(texture);
 }
 
 int Bitmap::getW() const {
-	return surface->w;
+	return w;
 }
 
 int Bitmap::getH() const {
-	return surface->h;
+	return h;
 }
 
 void Bitmap::registerLua(lua_State *l) {
@@ -43,3 +57,11 @@ void Bitmap::registerLua(lua_State *l) {
 			.endClass()
 		.endNamespace();
 }
+
+void Bitmap::__setRenderer(SDL_Renderer *r) { // FIXME
+	if (renderer != NULL) {
+		throw std::logic_error("Can't call Bitmap::__setRenderer more than once");
+	}
+	renderer = r;
+}
+

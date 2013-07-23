@@ -9,6 +9,7 @@
 #include <algorithm>
 
 #include "RenderWindow.h"
+#include "Bitmap.h"
 #include "Log.h"
 
 LUA_REG_TYPE(RenderWindow);
@@ -28,6 +29,9 @@ RenderWindow::RenderWindow(int w, int h, bool fullscreen) : viewX(0), viewY(0), 
 	Log::info("Max texture size: %d x %d", info.max_texture_width, info.max_texture_height);
 
 	lastTimestamp = SDL_GetTicks();
+
+	// FIXME - coupling that I do not like!
+	Bitmap::__setRenderer(renderer);
 
 	Log::info("RenderWindow initialized");
 }

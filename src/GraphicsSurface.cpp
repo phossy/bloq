@@ -57,15 +57,9 @@ void GraphicsSurface::registerLua(lua_State *l) {
 
 void GraphicsSurface::drawBitmap(BitmapRef bmp, int x, int y) {
 	SDL_Renderer *r = getRenderer();
-
 	SDL_Rect rect = {x, y, bmp->getW(), bmp->getH()};
 
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(r, bmp->surface);
-	if (texture == NULL) {
-		throw std::runtime_error(SDL_GetError());
-	}
-	SDL_RenderCopy(r, texture, NULL, &rect);
-	SDL_DestroyTexture(texture);
+	SDL_RenderCopy(r, bmp->texture, NULL, &rect);
 }
 
 void GraphicsSurface::drawText(TypefaceRef font, int x, int y, const std::string& text, const RGBAColor& color) {
@@ -83,10 +77,10 @@ void GraphicsSurface::drawText(TypefaceRef font, int x, int y, const std::string
 	SDL_Rect rect = {x, y, textSurf->w, textSurf->h};
 
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(r, textSurf);
+	SDL_FreeSurface(textSurf);
 	if (texture == NULL) {
 		throw std::runtime_error(SDL_GetError());
 	}
-	SDL_FreeSurface(textSurf);
 	SDL_RenderCopy(r, texture, NULL, &rect);
 	SDL_DestroyTexture(texture);
 }

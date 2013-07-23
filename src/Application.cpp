@@ -21,6 +21,8 @@
 
 LUA_REG_TYPE(Application);
 
+#define SHOW_FPS
+
 Application::SDLInitializer::SDLInitializer() {
 	// Basic SDL initialization
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {

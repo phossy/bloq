@@ -28,9 +28,14 @@ public:
 
 	static void registerLua(lua_State *l);
 
+	static void __setRenderer(SDL_Renderer *r);
+
 	friend class GraphicsSurface;
 private:
-	SDL_Surface *surface;
+	static SDL_Renderer *renderer;
+
+	SDL_Texture *texture;
+	int  w, h;
 };
 
 #endif /* BITMAP_H_ */
