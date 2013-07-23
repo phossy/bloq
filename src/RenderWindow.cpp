@@ -14,25 +14,26 @@
 LUA_REG_TYPE(RenderWindow);
 
 RenderWindow::RenderWindow(int w, int h, bool fullscreen) : viewX(0), viewY(0), targetFps(0) {
-	// create the window
-	window = SDL_CreateWindow(APPLICATION_NAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
-	if (window == NULL) {
+	// create the window and renderer
+	if (SDL_CreateWindowAndRenderer(w, h, fullscreen ? SDL_WINDOW_FULLSCREEN : 0, &window, &renderer) < 0) {
+		throw std::runtime_error(SDL_GetError());
+	}
+	
+	SDL_RendererInfo info;
+	if (SDL_GetRendererInfo(renderer, &info) < 0) {
 		throw std::runtime_error(SDL_GetError());
 	}
 
-	// create the renderer
-	/*renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	if (renderer == NULL) {
-		throw std::runtime_error(SDL_GetError());
-	}*/
-	
+	Log::info("Using renderer: %s", info.name);
+	Log::info("Max texture size: %d x %d", info.max_texture_width, info.max_texture_height);
+
 	lastTimestamp = SDL_GetTicks();
 
 	Log::info("RenderWindow initialized");
 }
 
 RenderWindow::~RenderWindow() {
-	//SDL_DestroyRenderer(renderer);
+	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 }
 
@@ -49,7 +50,7 @@ void RenderWindow::registerLua(lua_State *l) {
 }
 
 void RenderWindow::repaint() {
-	SDL_UpdateWindowSurface(window);
+	SDL_RenderPresent(renderer);
 	
 	// FPS limiter
 	if (targetFps != 0) {
@@ -59,8 +60,8 @@ void RenderWindow::repaint() {
 	}
 }
 
-SDL_Surface* RenderWindow::getSurface() const {
-	return SDL_GetWindowSurface(window);
+SDL_Renderer* RenderWindow::getRenderer() const {
+	return renderer;
 }
 
 int RenderWindow::getViewX() const {
@@ -85,4 +86,16 @@ int RenderWindow::getTargetFps() const {
 
 void RenderWindow::setTargetFps(int fps) {
 	targetFps = fps;
+}
+
+int RenderWindow::getW() const {
+	int w, h;
+	SDL_GetWindowSize(window, &w, &h);
+	return w;
+}
+
+int RenderWindow::getH() const {
+	int w, h;
+	SDL_GetWindowSize(window, &w, &h);
+	return h;
 }

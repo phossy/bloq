@@ -40,13 +40,13 @@ public:
 	void drawText(TypefaceRef font, int x, int y, const std::string& text, const RGBAColor& color);
 	void drawRect(int x, int y, int w, int h, const RGBAColor& color);
 
-	int getW() const;
-	int getH() const;
+	virtual int getW() const = 0;
+	virtual int getH() const = 0;
 	
 	static void registerLua(lua_State *l);
 protected:
 	virtual void repaint() = 0;
-	virtual SDL_Surface* getSurface() const = 0;
+	virtual SDL_Renderer* getRenderer() const = 0;
 };
 
 #endif /* GRAPHICSSURFACE_H_ */

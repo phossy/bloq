@@ -130,6 +130,11 @@ int Application::run() {
 	// ---------- MAIN LOOP ----------
 	bool isStopping = false;
 	
+#ifdef SHOW_FPS
+	int lastTick = SDL_GetTicks();
+	int repaints = 0;
+#endif
+
 	while (!isStopping) {
 		SDL_Event e;
 
@@ -169,6 +174,16 @@ int Application::run() {
 		console->draw(renderWin);
 		
 		renderWin->repaint();
+
+#ifdef SHOW_FPS
+		repaints++;
+
+		if (SDL_GetTicks() - lastTick >= 1000) {
+			Log::info("FPS = %d", repaints);
+			repaints = 0;
+			lastTick = SDL_GetTicks();
+		}
+#endif
 	}
 
 	// ----------

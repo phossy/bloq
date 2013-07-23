@@ -8,8 +8,6 @@
 #ifndef RENDERWINDOW_H_
 #define RENDERWINDOW_H_
 
-#define APPLICATION_NAME "APP NAME"
-
 #include <SDL2/SDL.h>
 #include <memory>
 
@@ -34,13 +32,16 @@ public:
 	void setTargetFps(int fps);
 	
 	static void registerLua(lua_State *l);
+
+	virtual int getW() const;
+	virtual int getH() const;
 protected:
-	virtual SDL_Surface* getSurface() const;
+	virtual SDL_Renderer* getRenderer() const;
 private:
 	int viewX, viewY, lastTimestamp, targetFps;
 	
 	SDL_Window* window;
-	//SDL_Renderer* renderer;
+	SDL_Renderer* renderer;
 };
 
 #endif /* RENDERWINDOW_H_ */

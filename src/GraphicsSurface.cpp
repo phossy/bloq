@@ -56,10 +56,16 @@ void GraphicsSurface::registerLua(lua_State *l) {
 }
 
 void GraphicsSurface::drawBitmap(BitmapRef bmp, int x, int y) {
-	SDL_Surface *s = getSurface();
+	SDL_Renderer *r = getRenderer();
 
-	SDL_Rect rect = {x, y, 0, 0};
-	SDL_BlitSurface(bmp->surface, NULL, s, &rect);
+	SDL_Rect rect = {x, y, bmp->getW(), bmp->getH()};
+
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(r, bmp->surface);
+	if (texture == NULL) {
+		throw std::runtime_error(SDL_GetError());
+	}
+	SDL_RenderCopy(r, texture, NULL, &rect);
+	SDL_DestroyTexture(texture);
 }
 
 void GraphicsSurface::drawText(TypefaceRef font, int x, int y, const std::string& text, const RGBAColor& color) {
@@ -67,32 +73,28 @@ void GraphicsSurface::drawText(TypefaceRef font, int x, int y, const std::string
 		return; // nothing to do
 	}
 	
-	SDL_Surface *s = getSurface();
-	SDL_Rect rect = {x, y, 0, 0};
+	SDL_Renderer *r = getRenderer();
 
 	SDL_Surface *textSurf = TTF_RenderText_Blended(font->font, text.c_str(), MAKE_SDL_COLOR(color));
 	if (textSurf == NULL) {
 		throw std::runtime_error(TTF_GetError());
 	}
 
-	SDL_BlitSurface(textSurf, NULL, s, &rect);
+	SDL_Rect rect = {x, y, textSurf->w, textSurf->h};
+
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(r, textSurf);
+	if (texture == NULL) {
+		throw std::runtime_error(SDL_GetError());
+	}
 	SDL_FreeSurface(textSurf);
+	SDL_RenderCopy(r, texture, NULL, &rect);
+	SDL_DestroyTexture(texture);
 }
 
 void GraphicsSurface::drawRect(int x, int y, int w, int h, const RGBAColor& color) {
-	SDL_Surface *s = getSurface();
+	SDL_Renderer *r = getRenderer();
 	SDL_Rect rect = {x, y, w, h};
 	
-	unsigned int mappedColor = SDL_MapRGBA(s->format, std::get<0>(color), std::get<1>(color), std::get<2>(color), std::get<3>(color));
-	SDL_FillRect(s, &rect, mappedColor);
-}
-
-int GraphicsSurface::getW() const {
-	SDL_Surface *s = getSurface();
-	return s->w;
-}
-
-int GraphicsSurface::getH() const {
-	SDL_Surface *s = getSurface();
-	return s->h;
+	SDL_SetRenderDrawColor(r, std::get<0>(color), std::get<1>(color), std::get<2>(color), std::get<3>(color));
+	SDL_RenderFillRect(r, &rect);
 }
