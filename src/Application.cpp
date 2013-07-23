@@ -98,7 +98,12 @@ Application::Application(int argc, char **argv) : args() {
 	// Perform game initialization
 	try {
 		// TODO
-		scriptMgr->runFile("assets/init.lua");
+		try {
+			std::string scriptName = args.at(1);
+			scriptMgr->runFile(scriptName);
+		} catch (std::out_of_range const& e) {
+			scriptMgr->runFile("assets/init.lua");
+		}
 	} catch (luabridge::LuaException const& e) {
 		Log::warn("Script threw Lua exception: %s", e.what());
 	} catch (std::exception const& e) {
